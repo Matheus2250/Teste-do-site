@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Massagem, Massoterapia, Shiatsu, Quick Massage - Espaço VIV</title>
+    <meta name="description" content="ABERTO 24H Com diversas promoções para você! PROFISSIONAIS CERTIFICADOS Nossas massagistas e terapeutas são treinadas e certificadas QUICK MASSAGE PARA EMPRESAS Aumente a produtividade da sua empresa">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://espacoviv.com/wp-content/uploads/2018/09/icon-16.png" type="image/x-icon" />
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- CSS Essenciais -->
+    <link rel="stylesheet" href="https://espacoviv.com/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.30.2">
+    <link rel="stylesheet" href="https://espacoviv.com/wp-content/plugins/elementor/assets/lib/swiper/v8/css/swiper.min.css?ver=8.4.5">
+    <link rel="stylesheet" href="https://espacoviv.com/wp-content/plugins/elementor-pro/assets/css/widget-slides.min.css?ver=3.29.2">
+    <link rel="stylesheet" href="https://espacoviv.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/font-awesome.min.css?ver=4.7.0">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos customizados */
+        body {
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        .fusion-header-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 99999;
+        }
+        
+        .fusion-header {
+            background: #47103C;
+            color: white;
+            padding: 10px 0;
+        }
+        
+        .fusion-header-v2 {
+            background: white;
+            border-bottom: 1px solid #eee;
+            padding: 0;
+        }
+        
+        .fusion-row {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .fusion-contact-info {
+            font-size: 13px;
+        }
+        
+        .fusion-contact-info a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .fusion-social-links-header a {
+            color: white;
+            margin-left: 10px;
+            font-size: 16px;
+        }
+        
+        .fusion-logo {
+            padding: 15px 0;
+        }
+        
+        .fusion-main-menu ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+        
+        .fusion-main-menu a {
+            color: #333;
+            text-decoration: none;
+            padding: 20px 0;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s;
+        }
+        
+        .fusion-main-menu a:hover {
+            color: #47103C;
+        }
+        
+        .fusion-main-menu .current-menu-item a {
+            color: #47103C;
+            border-bottom: 3px solid #47103C;
+        }
+        
+        .login-massagistas-btn {
+            background: #47103C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .login-massagistas-btn:hover {
+            background: #3c0d32;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            margin-top: 120px;
+            height: 600px;
+            position: relative;
+        }
+        
+        .swiper {
+            height: 100%;
+        }
+        
+        .swiper-slide {
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        
+        .slide-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .slide-content p {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        
+        .slide-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .slide-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+        }
+        
+        /* Seção Ganhe Massagem */
+        .ganhe-massagem-section {
+            background: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .ganhe-massagem-section h2 {
+            color: #47103C;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-family: 'Roboto Slab', serif;
+        }
+        
+        .ganhe-massagem-section p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .quero-massagem-btn {
+            background: #47103C;
+            color: white;
+            border: 2px solid #47103C;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .quero-massagem-btn:hover {
+            background: transparent;
+            color: #47103C;
+        }
+        
+        /* Footer */
+        .fusion-footer-widget-area {
+            background: #333;
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .fusion-footer-widget-column h4 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .fusion-footer-widget-column a {
+            color: #ccc;
+            text-decoration: none;
+        }
+        
+        .fusion-footer-widget-column a:hover {
+            color: white;
+        }
+        
+        .fusion-footer-copyright-area {
+            border-top: 1px solid #555;
+            padding: 20px 0;
+            text-align: center;
+            color: #ccc;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 3% auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-close {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #47103C;
+            outline: none;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        
+        .btn-loading {
+            display: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .fusion-main-menu {
+                display: none;
+            }
+            
+            .slide-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide-content p {
+                font-size: 1.2rem;
+            }
+            
+            .hero-section {
+                height: 400px;
+            }
+            
+            .modal-content {
+                margin: 2% auto;
+                padding: 20px;
+                max-width: 95%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .modal-content h2 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="home">
+    
+    <!-- Header -->
+    <div class="fusion-header-wrapper">
+        <!-- Top Header -->
+        <div class="fusion-header">
+            <div class="fusion-row">
+                <div class="fusion-alignleft">
+                    <div class="fusion-contact-info">
+                        <span>(11) 93387-6643 / (11) 3082-3652</span>
+                        <span class="fusion-header-separator">|</span>
+                        <span><a href="mailto:contato@espacoviv.com">contato@espacoviv.com</a> / <a href="mailto:rh.espacoviv@gmail.com">rh.espacoviv@gmail.com</a></span>
+                    </div>
+                </div>
+                <div class="fusion-alignright">
+                    <div class="fusion-social-links-header">
+                        <a href="http://facebook.com/espacovivrj/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="http://instagram.com/espacovivrj/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Header -->
+        <div class="fusion-header-v2">
+            <div class="fusion-row">
+                <div class="fusion-logo">
+                    <a href="#home">
+                        <img src="https://espacoviv.com/wp-content/uploads/2019/06/logo-espaco-viv-rj.png" alt="Espaço VIV Logo" width="184" height="73" />
+                    </a>
+                </div>
+                
+                <nav class="fusion-main-menu">
+                    <ul>
+                        <li class="current-menu-item"><a href="#home">Início</a></li>
+                        <li><a href="#unidades">Unidades</a></li>
+                        <li><a href="#massagens">Massagens</a></li>
+                        <li><a href="#promocoes">Promoções</a></li>
+                        <li><a href="#equipe">Equipe</a></li>
+                        <li><a href="#contato">Contato</a></li>
+                    </ul>
+                </nav>
+                
+                <button id="loginBtn" class="login-massagistas-btn">
+                    <i class="fas fa-user"></i> Login Massagistas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Slider -->
+    <section id="home" class="hero-section">
+        <div class="swiper heroSwiper">
+            <div class="swiper-wrapper">
+                <!-- Slide 1: ABERTO 24H -->
+                <div class="swiper-slide" style="background-image: url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <h1>ABERTO 24H</h1>
+                        <p>Com diversas promoções para você!</p>
+                        <a href="#promocoes" class="slide-btn">Ver Promoções</a>
+                    </div>
+                </div>
+                
+                <!-- Slide 2: PROFISSIONAIS CERTIFICADOS -->
+                <div class="swiper-slide" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <h1>PROFISSIONAIS CERTIFICADOS</h1>
+                        <p>Nossas massagistas e terapeutas são treinadas e certificadas</p>
+                        <a href="#equipe" class="slide-btn">Conhecer Equipe</a>
+                    </div>
+                </div>
+                
+                <!-- Slide 3: QUICK MASSAGE PARA EMPRESAS -->
+                <div class="swiper-slide" style="background-image: url('https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <h1>QUICK MASSAGE PARA EMPRESAS</h1>
+                        <p>Aumente a produtividade da sua empresa</p>
+                        <a href="#empresas" class="slide-btn">Saiba Mais</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+
+    <!-- Seção Ganhe uma Quick Massage -->
+    <section class="ganhe-massagem-section">
+        <div class="section-container">
+            <h2>GANHE UMA QUICK MASSAGE</h2>
+            <p>Preencha seus dados e nos envie, você ganhará uma quick massage para ser utilizada em sua primeira visita a uma de nossas unidades.</p>
+            <a href="#" id="agendarBtn" class="quero-massagem-btn">QUERO MINHA MASSAGEM</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="fusion-footer-widget-area">
+        <div class="footer-row">
+            <div class="fusion-footer-widget-column">
+                <h4>Unidades</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li><a href="#brasilia">Brasília</a></li>
+                    <li><a href="#rio">Rio de Janeiro</a></li>
+                    <li><a href="#sp">São Paulo</a></li>
+                </ul>
+            </div>
+            
+            <div class="fusion-footer-widget-column">
+                <h4>Pagamento</h4>
+                <img src="https://espacoviv.com/wp-content/uploads/2023/06/visa-master.png" alt="Cartões aceitos" style="max-width: 150px;">
+            </div>
+            
+            <div class="fusion-footer-widget-column">
+                <h4>E-mail</h4>
+                <p>contato@espacoviv.com</p>
+                <p>rh.espacoviv@gmail.com</p>
+            </div>
+        </div>
+        
+        <div class="fusion-footer-copyright-area">
+            <div class="fusion-row">
+                <p>&copy; 2024 Espaço VIV. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            
+            <!-- Formulário de Login -->
+            <div id="loginFormDiv">
+                <h2>Login - Massagistas</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>E-mail:</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="quero-massagem-btn" style="width: 100%;">
+                            <span class="btn-text">Entrar</span>
+                            <span class="btn-loading" style="display: none;">Entrando...</span>
+                        </button>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        <a href="#" id="showForgotPassword" style="color: #47103C;">Esqueci minha senha</a> | 
+                        <a href="#" id="showRegisterForm" style="color: #47103C;">Cadastre-se</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Formulário de Cadastro -->
+            <div id="registerFormDiv" style="display: none;">
+                <h2>Cadastro - Massagistas</h2>
+                <form id="registerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome Completo:</label>
+                            <input type="text" id="registerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CPF:</label>
+                            <input type="text" id="registerCpf" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>E-mail:</label>
+                            <input type="email" id="registerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone:</label>
+                            <input type="tel" id="registerPhone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Senha:</label>
+                            <input type="password" id="registerPassword" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmar Senha:</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Unidade de Trabalho:</label>
+                        <select id="registerUnit" required>
+                            <option value="">Selecione uma unidade</option>
+                            <option value="sp">São Paulo - Perdizes</option>
+                            <option value="rj">Rio de Janeiro - Centro</option>
+                            <option value="bsb">Brasília - SHS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Especialidades:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="specialties" value="shiatsu"> Shiatsu
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="specialties" value="relaxante"> Relaxante
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="specialties" value="quick"> Quick Massage
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="specialties" value="terapeutica"> Terapêutica
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="specialties" value="reflexologia"> Reflexologia
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="specialties" value="drenagem"> Drenagem Linfática
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="quero-massagem-btn" style="width: 100%;">
+                            <span class="btn-text">Cadastrar</span>
+                            <span class="btn-loading" style="display: none;">Cadastrando...</span>
+                        </button>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px;">
+                        <a href="#" id="showLoginForm" style="color: #47103C;">Já tenho conta - Fazer Login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agendamento -->
+    <div id="agendamentoModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="modal-close">&times;</span>
+            <h2>Agendar Massagem</h2>
+            <form id="agendamentoForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome Completo:</label>
+                        <input type="text" name="clientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone:</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Unidade:</label>
+                        <select name="unit" required>
+                            <option value="">Selecione uma unidade</option>
+                            <option value="sp">São Paulo - Perdizes</option>
+                            <option value="rj">Rio de Janeiro - Centro</option>
+                            <option value="bsb">Brasília - SHS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Massagem:</label>
+                        <select name="service" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="shiatsu">Shiatsu</option>
+                            <option value="quick">Quick Massage</option>
+                            <option value="relaxante">Relaxante</option>
+                            <option value="terapeutica">Terapêutica</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Massagista:</label>
+                        <select id="massagistaSelect" required onchange="updateAvailableTimes()">
+                            <option value="">Selecione uma massagista</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data:</label>
+                        <input type="date" id="dataSelect" required onchange="updateAvailableTimes()">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Horário:</label>
+                        <select id="horarioSelect" required>
+                            <option value="">Primeiro selecione massagista e data</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status da Disponibilidade:</label>
+                        <div id="availabilityStatus" style="padding: 10px; border-radius: 5px; background: #f8f9fa; color: #666; font-size: 14px;">
+                            Selecione massagista e data para ver disponibilidade
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Observações (opcional):</label>
+                    <textarea name="notes" rows="3" placeholder="Digite aqui suas observações..."></textarea>
+                </div>
+                
+                <div class="form-group" style="margin-top: 25px;">
+                    <button type="submit" class="quero-massagem-btn" style="width: 100%; padding: 15px;">Confirmar Agendamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script>
+        // Inicializar Swiper
+        const swiper = new Swiper('.heroSwiper', {
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+        
+        // Modal functionality
+        document.getElementById('loginBtn').onclick = function() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+        
+        document.getElementById('agendarBtn').onclick = function() {
+            document.getElementById('agendamentoModal').style.display = 'block';
+        }
+        
+        // Close modals
+        document.querySelectorAll('.modal-close').forEach(function(closeBtn) {
+            closeBtn.onclick = function() {
+                this.closest('.modal').style.display = 'none';
+            }
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+        
+        // Toggle between login and register forms
+        document.getElementById('showRegisterForm').onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('loginFormDiv').style.display = 'none';
+            document.getElementById('registerFormDiv').style.display = 'block';
+        }
+        
+        document.getElementById('showLoginForm').onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('loginFormDiv').style.display = 'block';
+            document.getElementById('registerFormDiv').style.display = 'none';
+        }
+        
+        // Máscara para CPF e telefone
+        document.getElementById('registerCpf').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        });
+        
+        document.getElementById('registerPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d)/, '($1) $2');
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+
+        // Form submissions
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simular loading
+            const btnText = document.querySelector('#loginForm .btn-text');
+            const btnLoading = document.querySelector('#loginForm .btn-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+            
+            // Simulação de login (verificar se usuário existe no localStorage)
+            setTimeout(() => {
+                const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
+                const user = users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    // Login bem-sucedido
+                    localStorage.setItem('espacoviv_current_user', JSON.stringify(user));
+                    alert('Login realizado com sucesso!');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Erro de login
+                    alert('E-mail ou senha incorretos!');
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                }
+            }, 1500);
+        }
+        
+        document.getElementById('registerForm').onsubmit = function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const cpf = document.getElementById('registerCpf').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const unit = document.getElementById('registerUnit').value;
+            const specialties = Array.from(document.querySelectorAll('input[name="specialties"]:checked')).map(cb => cb.value);
+            
+            // Validações
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
+            if (specialties.length === 0) {
+                alert('Selecione pelo menos uma especialidade!');
+                return;
+            }
+            
+            // Simular loading
+            const btnText = document.querySelector('#registerForm .btn-text');
+            const btnLoading = document.querySelector('#registerForm .btn-loading');
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+            
+            setTimeout(() => {
+                // Verificar se e-mail já existe
+                const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
+                const emailExists = users.some(u => u.email === email);
+                
+                if (emailExists) {
+                    alert('Este e-mail já está cadastrado!');
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                    return;
+                }
+                
+                // Criar novo usuário
+                const newUser = {
+                    id: Date.now(),
+                    name,
+                    cpf,
+                    email,
+                    phone,
+                    password,
+                    unit,
+                    specialties,
+                    isOnline: false,
+                    availability: {}, // Será preenchido no dashboard
+                    appointments: [],
+                    createdAt: new Date().toISOString()
+                };
+                
+                users.push(newUser);
+                localStorage.setItem('espacoviv_users', JSON.stringify(users));
+                
+                alert('Cadastro realizado com sucesso! Agora você pode fazer login.');
+                
+                // Voltar para o formulário de login
+                document.getElementById('showLoginForm').click();
+                document.getElementById('registerForm').reset();
+                
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Initialize booking form
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMassagistas();
+            document.getElementById('dataSelect').min = new Date().toISOString().split('T')[0];
+        });
+        
+        function loadMassagistas() {
+            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
+            const massagistas = users.filter(user => user.isOnline);
+            const select = document.getElementById('massagistaSelect');
+            
+            select.innerHTML = '<option value="">Selecione uma massagista</option>';
+            
+            massagistas.forEach(massagista => {
+                const option = document.createElement('option');
+                option.value = massagista.id;
+                option.textContent = `${massagista.name} - ${getUnitName(massagista.unit)}`;
+                select.appendChild(option);
+            });
+            
+            if (massagistas.length === 0) {
+                select.innerHTML = '<option value="">Nenhuma massagista online no momento</option>';
+            }
+        }
+        
+        function getUnitName(unit) {
+            const units = {
+                'sp': 'São Paulo - Perdizes',
+                'rj': 'Rio de Janeiro - Centro',
+                'bsb': 'Brasília - SHS'
+            };
+            return units[unit] || 'Unidade não definida';
+        }
+        
+        function updateAvailableTimes() {
+            const massagistaId = document.getElementById('massagistaSelect').value;
+            const selectedDate = document.getElementById('dataSelect').value;
+            const horarioSelect = document.getElementById('horarioSelect');
+            const statusDiv = document.getElementById('availabilityStatus');
+            
+            if (!massagistaId || !selectedDate) {
+                horarioSelect.innerHTML = '<option value="">Primeiro selecione massagista e data</option>';
+                statusDiv.innerHTML = 'Selecione massagista e data para ver disponibilidade';
+                statusDiv.style.background = '#f8f9fa';
+                statusDiv.style.color = '#666';
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
+            const massagista = users.find(u => u.id === massagistaId);
+            
+            if (!massagista) {
+                horarioSelect.innerHTML = '<option value="">Massagista não encontrada</option>';
+                statusDiv.innerHTML = 'Massagista não encontrada';
+                statusDiv.style.background = '#f8d7da';
+                statusDiv.style.color = '#721c24';
+                return;
+            }
+            
+            const dateKey = selectedDate;
+            const availability = massagista.availability && massagista.availability[dateKey];
+            
+            if (!availability || availability.status !== 'available') {
+                horarioSelect.innerHTML = '<option value="">Massagista não disponível nesta data</option>';
+                statusDiv.innerHTML = 'Massagista não disponível nesta data';
+                statusDiv.style.background = '#f8d7da';
+                statusDiv.style.color = '#721c24';
+                return;
+            }
+            
+            // Get existing appointments for this date
+            const appointments = JSON.parse(localStorage.getItem('espacoviv_appointments') || '[]');
+            const bookedTimes = appointments
+                .filter(apt => apt.massagistId === massagistaId && apt.date === dateKey && apt.status !== 'cancelled')
+                .map(apt => apt.time);
+            
+            // Filter available time slots
+            const availableSlots = availability.timeSlots.filter(slot => !bookedTimes.includes(slot));
+            
+            horarioSelect.innerHTML = '<option value="">Selecione um horário</option>';
+            
+            if (availableSlots.length === 0) {
+                horarioSelect.innerHTML = '<option value="">Nenhum horário disponível</option>';
+                statusDiv.innerHTML = 'Todos os horários já estão ocupados nesta data';
+                statusDiv.style.background = '#fff3cd';
+                statusDiv.style.color = '#856404';
+            } else {
+                availableSlots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot;
+                    option.textContent = slot;
+                    horarioSelect.appendChild(option);
+                });
+                
+                statusDiv.innerHTML = `${availableSlots.length} horário(s) disponível(eis)`;
+                statusDiv.style.background = '#d4edda';
+                statusDiv.style.color = '#155724';
+            }
+        }
+        
+        document.getElementById('agendamentoForm').onsubmit = function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            const appointment = {
+                id: Date.now().toString(),
+                clientName: formData.get('clientName'),
+                phone: formData.get('phone'),
+                unit: formData.get('unit'),
+                service: formData.get('service'),
+                massagistId: document.getElementById('massagistaSelect').value,
+                date: document.getElementById('dataSelect').value,
+                time: document.getElementById('horarioSelect').value,
+                notes: formData.get('notes') || '',
+                status: 'confirmed',
+                createdAt: new Date().toISOString()
+            };
+            
+            // Validate required fields
+            if (!appointment.clientName || !appointment.phone || !appointment.unit || 
+                !appointment.service || !appointment.massagistId || !appointment.date || !appointment.time) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Save appointment
+            const appointments = JSON.parse(localStorage.getItem('espacoviv_appointments') || '[]');
+            appointments.push(appointment);
+            localStorage.setItem('espacoviv_appointments', JSON.stringify(appointments));
+            
+            alert('Agendamento confirmado! Você receberá uma confirmação em breve.');
+            document.getElementById('agendamentoModal').style.display = 'none';
+            e.target.reset();
+            
+            // Reset form state
+            document.getElementById('horarioSelect').innerHTML = '<option value="">Primeiro selecione massagista e data</option>';
+            document.getElementById('availabilityStatus').innerHTML = 'Selecione massagista e data para ver disponibilidade';
+            document.getElementById('availabilityStatus').style.background = '#f8f9fa';
+            document.getElementById('availabilityStatus').style.color = '#666';
+        }
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

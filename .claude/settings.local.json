@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:espacoviv.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

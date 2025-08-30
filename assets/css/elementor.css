@@ -1,0 +1,482 @@
+/**
+ * Elementor Specific Styles
+ * Recreating Elementor's component styling
+ */
+
+/* Elementor Base */
+.elementor-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.elementor-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.elementor-column {
+    position: relative;
+    flex: 1;
+    padding: 0 15px;
+}
+
+.elementor-widget-container {
+    position: relative;
+}
+
+/* Hero Slider Specific */
+.hero-slider .elementor-container {
+    height: 600px;
+    align-items: center;
+}
+
+.hero-column {
+    flex: 2;
+    z-index: 2;
+}
+
+.hero-image-column {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 3;
+}
+
+/* Swiper Overrides */
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 80px;
+}
+
+.swiper-slide-contents {
+    max-width: 600px;
+    text-align: left;
+}
+
+/* Elementor Animations */
+.elementor-invisible {
+    visibility: hidden;
+}
+
+.fadeInUp {
+    animation: fadeInUp 1s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fadeInDown {
+    animation: fadeInDown 1s ease-in-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ken Burns Effect */
+.elementor-ken-burns {
+    animation: kenBurns 20s infinite linear;
+    transform-origin: center center;
+}
+
+@keyframes kenBurns {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Image Box Widget */
+.elementor-image-box-wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.elementor-image-box-img {
+    margin-bottom: 20px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.elementor-image-box-img img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.elementor-image-box-wrapper:hover .elementor-image-box-img img {
+    transform: scale(1.1);
+}
+
+.elementor-image-box-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4B0082;
+    margin-bottom: 15px;
+    font-family: 'Roboto Slab', serif;
+}
+
+.elementor-image-box-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Text Editor Widget */
+.elementor-text-editor {
+    color: #666;
+    line-height: 1.7;
+}
+
+.elementor-text-editor p {
+    margin-bottom: 1rem;
+}
+
+/* Heading Widget */
+.elementor-heading-title {
+    font-family: 'Roboto Slab', serif;
+    font-weight: 700;
+    color: #4B0082;
+    line-height: 1.2;
+}
+
+.elementor-size-default {
+    font-size: 2rem;
+}
+
+.elementor-size-small {
+    font-size: 1.5rem;
+}
+
+.elementor-size-medium {
+    font-size: 2.5rem;
+}
+
+.elementor-size-large {
+    font-size: 3rem;
+}
+
+.elementor-size-xl {
+    font-size: 3.5rem;
+}
+
+/* Button Widget */
+.elementor-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #4B0082;
+    color: white;
+}
+
+.elementor-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(75, 0, 130, 0.3);
+    color: white;
+}
+
+.elementor-size-xs {
+    padding: 8px 16px;
+    font-size: 12px;
+}
+
+.elementor-size-sm {
+    padding: 10px 20px;
+    font-size: 13px;
+}
+
+.elementor-size-md {
+    padding: 12px 24px;
+    font-size: 14px;
+}
+
+.elementor-size-lg {
+    padding: 16px 32px;
+    font-size: 16px;
+}
+
+.elementor-size-xl {
+    padding: 20px 40px;
+    font-size: 18px;
+}
+
+/* Form Styling */
+.elementor-field-group {
+    margin-bottom: 20px;
+}
+
+.elementor-field {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    background: white;
+}
+
+.elementor-field:focus {
+    border-color: #4B0082;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(75, 0, 130, 0.1);
+}
+
+.elementor-field-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.elementor-field-required {
+    color: #e74c3c;
+}
+
+/* Spacer Widget */
+.elementor-spacer {
+    height: 50px;
+}
+
+/* Divider Widget */
+.elementor-divider {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.elementor-divider-separator {
+    border-top: 1px solid #e0e0e0;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Icon Widget */
+.elementor-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #4B0082;
+}
+
+.elementor-icon-box-wrapper {
+    text-align: center;
+}
+
+.elementor-icon-box-icon {
+    margin-bottom: 20px;
+}
+
+.elementor-icon-box-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.elementor-icon-box-description {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Progress Bar Widget */
+.elementor-progress-wrapper {
+    margin-bottom: 20px;
+}
+
+.elementor-progress-bar {
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 8px;
+}
+
+.elementor-progress-bar-inner {
+    background: #4B0082;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 2s ease;
+}
+
+/* Testimonial Widget */
+.elementor-testimonial-wrapper {
+    text-align: center;
+    padding: 30px;
+    background: #f8f8f8;
+    border-radius: 10px;
+}
+
+.elementor-testimonial-content {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.7;
+}
+
+.elementor-testimonial-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.elementor-testimonial-job {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+/* Counter Widget */
+.elementor-counter {
+    text-align: center;
+}
+
+.elementor-counter-number-wrapper {
+    color: #4B0082;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.elementor-counter-title {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Social Icons Widget */
+.elementor-social-icons-wrapper {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.elementor-social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #4B0082;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.elementor-social-icon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(75, 0, 130, 0.3);
+}
+
+/* Background Overlay */
+.elementor-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(75, 0, 130, 0.7);
+    z-index: 1;
+}
+
+/* Container Inner */
+.elementor-container .elementor-column {
+    position: relative;
+    z-index: 2;
+}
+
+/* Responsive Columns */
+@media (max-width: 1024px) {
+    .elementor-container {
+        flex-direction: column;
+    }
+    
+    .elementor-column {
+        width: 100%;
+        padding: 15px 0;
+    }
+    
+    .hero-slider .swiper-slide {
+        padding: 40px 20px;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    .hero-image-column {
+        order: -1;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .elementor-container {
+        padding: 0 15px;
+    }
+    
+    .elementor-column {
+        padding: 0 10px;
+    }
+    
+    .elementor-size-large,
+    .elementor-size-xl {
+        font-size: 2rem;
+    }
+    
+    .elementor-size-medium {
+        font-size: 1.8rem;
+    }
+    
+    .elementor-size-default {
+        font-size: 1.5rem;
+    }
+}

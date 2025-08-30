@@ -1,0 +1,725 @@
+/**
+ * Espaço VIV - Avada Style Recreation
+ * CSS que replica o visual do tema Avada original
+ */
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.avada-body {
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #ffffff;
+    overflow-x: hidden;
+}
+
+.fusion-body {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Container Styles */
+.elementor-container, .fusion-row {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.elementor-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.elementor-column {
+    position: relative;
+}
+
+/* Header Styles */
+.fusion-header-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Top Header */
+.fusion-header-top {
+    background: #4B0082;
+    color: white;
+    padding: 8px 0;
+    font-size: 13px;
+}
+
+.fusion-header-top-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.fusion-contact-info-phone-number,
+.fusion-contact-info-email-address {
+    color: white;
+}
+
+.fusion-contact-info-email-address a {
+    color: white;
+    text-decoration: none;
+}
+
+.fusion-header-separator {
+    margin: 0 10px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.fusion-social-networks {
+    display: flex;
+    gap: 10px;
+}
+
+.fusion-social-network-icon {
+    color: white;
+    font-size: 16px;
+    transition: opacity 0.3s;
+}
+
+.fusion-social-network-icon:hover {
+    opacity: 0.8;
+}
+
+/* Main Header */
+.fusion-header-main {
+    background: white;
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.fusion-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.fusion-logo img {
+    height: 60px;
+    width: auto;
+}
+
+/* Navigation */
+.fusion-main-menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.fusion-menu {
+    display: flex;
+    list-style: none;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-item {
+    position: relative;
+}
+
+.menu-item a {
+    display: block;
+    padding: 15px 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.menu-item:hover > a,
+.current-menu-item > a {
+    color: #4B0082;
+}
+
+.fusion-bottombar-highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: #4B0082;
+    transform: translateX(-50%);
+    transition: width 0.3s;
+}
+
+.menu-item:hover .fusion-bottombar-highlight::after,
+.current-menu-item .fusion-bottombar-highlight::after {
+    width: 80%;
+}
+
+/* Dropdown Menu */
+.fusion-dropdown-menu .sub-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s;
+    list-style: none;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+.fusion-dropdown-menu:hover .sub-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.fusion-dropdown-submenu a {
+    padding: 10px 20px;
+    color: #666;
+    font-size: 13px;
+}
+
+.fusion-dropdown-submenu:hover a {
+    background: #f8f8f8;
+    color: #4B0082;
+}
+
+.fusion-caret {
+    margin-left: 5px;
+    font-size: 10px;
+}
+
+/* Login Button */
+.fusion-header-login {
+    margin-left: 20px;
+}
+
+.fusion-login-btn {
+    background: #4B0082;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fusion-login-btn:hover {
+    background: #3d006a;
+    transform: translateY(-2px);
+}
+
+/* Mobile Menu */
+.fusion-mobile-menu-icons {
+    display: none;
+}
+
+/* Hero Slider */
+.hero-slider {
+    margin-top: 120px; /* Account for fixed header */
+    min-height: 600px;
+    position: relative;
+}
+
+.elementor-slides-wrapper {
+    height: 600px;
+    position: relative;
+    overflow: hidden;
+}
+
+.swiper-slide {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4B0082 0%, #6a1b9a 50%, #8e24aa 100%);
+    color: white;
+}
+
+.swiper-slide-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+.elementor-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(75, 0, 130, 0.8);
+}
+
+.swiper-slide-inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.elementor-slide-heading {
+    font-size: 3.5rem;
+    font-weight: 700;
+    font-family: 'Roboto Slab', serif;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+}
+
+.elementor-slide-description {
+    font-size: 1.4rem;
+    margin-bottom: 30px;
+    opacity: 0.95;
+}
+
+.elementor-slide-button {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+}
+
+.elementor-slide-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Slider Navigation */
+.elementor-swiper-button {
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.elementor-swiper-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.elementor-swiper-button-prev {
+    left: 30px;
+}
+
+.elementor-swiper-button-next {
+    right: 30px;
+}
+
+/* Hero Image */
+.hero-image-column {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+}
+
+.hero-main-image {
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Lead Form Section */
+.lead-form-section {
+    padding: 80px 0;
+    background: #f8f8f8;
+    text-align: center;
+}
+
+.elementor-heading-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #4B0082;
+    margin-bottom: 20px;
+    font-family: 'Roboto Slab', serif;
+}
+
+.elementor-text-editor p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.lead-form-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.fusion-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.fusion-form-field {
+    position: relative;
+}
+
+.fusion-form-input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 30px;
+    font-size: 16px;
+    transition: all 0.3s;
+    background: white;
+}
+
+.fusion-form-input:focus {
+    border-color: #4B0082;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(75, 0, 130, 0.1);
+}
+
+.fusion-button {
+    background: #4B0082;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.fusion-button:hover {
+    background: #3d006a;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(75, 0, 130, 0.3);
+}
+
+.fusion-button-primary {
+    background: #4B0082;
+}
+
+.fusion-button-large {
+    padding: 20px 40px;
+    font-size: 18px;
+}
+
+.fusion-button-cta {
+    background: linear-gradient(45deg, #4B0082, #6a1b9a);
+    box-shadow: 0 5px 20px rgba(75, 0, 130, 0.3);
+}
+
+/* Unidades Section */
+.unidades-section {
+    padding: 80px 0;
+    background: white;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    color: #4B0082;
+    font-family: 'Roboto Slab', serif;
+}
+
+.unidades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+}
+
+.elementor-image-box-wrapper {
+    text-align: center;
+    background: #f8f8f8;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.elementor-image-box-wrapper:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.elementor-image-box-img {
+    margin: 0;
+    overflow: hidden;
+}
+
+.unidade-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.elementor-image-box-wrapper:hover .unidade-image {
+    transform: scale(1.05);
+}
+
+.elementor-image-box-content {
+    padding: 30px 20px;
+}
+
+.elementor-image-box-title {
+    font-size: 1.5rem;
+    color: #4B0082;
+    margin-bottom: 20px;
+    font-family: 'Roboto Slab', serif;
+}
+
+.unidade-info p {
+    margin: 10px 0;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.unidade-info i {
+    color: #4B0082;
+    width: 16px;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #4B0082, #6a1b9a);
+    text-align: center;
+}
+
+/* Footer */
+.fusion-footer-widget-area {
+    background: #333;
+    color: white;
+    padding: 60px 0 20px;
+}
+
+.fusion-footer-widget-column {
+    margin-bottom: 40px;
+}
+
+.widget-title h4 {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-family: 'Roboto Slab', serif;
+}
+
+.menu-unidades {
+    list-style: none;
+}
+
+.menu-unidades li {
+    margin: 8px 0;
+}
+
+.menu-unidades a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.menu-unidades a:hover {
+    color: white;
+}
+
+.payment-cards {
+    max-width: 150px;
+}
+
+.fusion-footer-copyright-area {
+    border-top: 1px solid #555;
+    padding-top: 20px;
+    text-align: center;
+    color: #ccc;
+    font-size: 13px;
+}
+
+/* Modals */
+.fusion-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.fusion-modal-content {
+    background: white;
+    margin: 5% auto;
+    border-radius: 15px;
+    max-width: 500px;
+    position: relative;
+    animation: modalSlideIn 0.3s ease;
+}
+
+.fusion-modal-large {
+    max-width: 800px;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fusion-modal-header {
+    padding: 30px 30px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fusion-modal-header h2 {
+    color: #4B0082;
+    font-family: 'Roboto Slab', serif;
+}
+
+.fusion-modal-close {
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.fusion-modal-close:hover {
+    color: #333;
+}
+
+.fusion-modal-body {
+    padding: 20px 30px 30px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .hero-image-column {
+        position: relative;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin-top: 40px;
+        text-align: center;
+    }
+    
+    .elementor-slide-heading {
+        font-size: 2.8rem;
+    }
+    
+    .unidades-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .fusion-header-top-content {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .fusion-main-menu {
+        display: none;
+    }
+    
+    .fusion-mobile-menu-icons {
+        display: block;
+    }
+    
+    .fusion-header-login {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .elementor-slide-heading {
+        font-size: 2rem;
+    }
+    
+    .elementor-slide-description {
+        font-size: 1.1rem;
+    }
+    
+    .hero-main-image {
+        width: 250px;
+        height: 300px;
+    }
+    
+    .elementor-swiper-button {
+        display: none;
+    }
+    
+    .unidades-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,787 @@
+/*
+ * Espaço VIV - Dashboard CSS
+ * Específico para o painel das massagistas
+ */
+
+/* Dashboard Body */
+.dashboard-body {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding-top: 0;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    background: linear-gradient(135deg, #4B0082, #6a1b9a);
+    color: white;
+    padding: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.dashboard-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.dashboard-logo-img {
+    height: 45px;
+    width: auto;
+}
+
+.dashboard-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    justify-content: center;
+}
+
+.user-avatar {
+    position: relative;
+}
+
+.user-photo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.user-details h2 {
+    color: white;
+    margin-bottom: 0.25rem;
+    font-size: 1.5rem;
+}
+
+.user-unit {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.user-status {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Status Switch */
+.status-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.status-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.status-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.status-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .status-slider {
+    background-color: #E6E6FA;
+}
+
+input:checked + .status-slider:before {
+    transform: translateX(26px);
+}
+
+.status-text {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Dashboard Main */
+.dashboard-main {
+    padding: 2rem 0;
+}
+
+/* Statistics */
+.dashboard-stats {
+    margin-bottom: 3rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(75, 0, 130, 0.15);
+    border-color: #4B0082;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4B0082, #6a1b9a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4B0082;
+    margin-bottom: 0.5rem;
+}
+
+.stat-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Tabs */
+.dashboard-tabs {
+    background: white;
+    border-radius: 12px;
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    overflow-x: auto;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: #666;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.tab-btn:hover {
+    background: #f8f9fa;
+    color: #4B0082;
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #4B0082, #6a1b9a);
+    color: white;
+}
+
+.tab-btn.active:hover {
+    background: linear-gradient(135deg, #3d006a, #5a1788);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.section-header h2 {
+    margin: 0;
+    color: #4B0082;
+}
+
+.section-header p {
+    color: #666;
+    margin: 0.25rem 0 0 0;
+    font-size: 0.9rem;
+}
+
+/* Agenda */
+.agenda-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.agenda-content {
+    min-height: 300px;
+}
+
+.appointment-card {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.appointment-card:hover {
+    border-color: #4B0082;
+    box-shadow: 0 4px 12px rgba(75, 0, 130, 0.1);
+}
+
+.appointment-time {
+    text-align: center;
+    color: #4B0082;
+    min-width: 80px;
+}
+
+.appointment-time strong {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.appointment-time small {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.appointment-details h4 {
+    color: #4B0082;
+    margin-bottom: 0.5rem;
+}
+
+.appointment-details p {
+    margin-bottom: 0.25rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.massage-type {
+    font-weight: 500;
+}
+
+.client-phone,
+.appointment-notes {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-status {
+    text-align: right;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-scheduled {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.status-completed {
+    background: rgba(39, 174, 96, 0.2);
+    color: #27ae60;
+}
+
+.status-cancelled {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+.status-no-show {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+}
+
+.appointment-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: auto;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #ddd;
+    margin-bottom: 1rem;
+}
+
+/* Profile Form */
+.profile-content {
+    max-width: 800px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #4B0082;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.875rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #4B0082;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(75, 0, 130, 0.1);
+}
+
+.form-control:disabled {
+    background: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.help-text {
+    display: block;
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Schedule */
+.schedule-content {
+    max-width: 600px;
+}
+
+.schedule-days {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.schedule-day {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.schedule-day:hover {
+    border-color: #4B0082;
+}
+
+.day-header {
+    margin-bottom: 1rem;
+}
+
+.day-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: #4B0082;
+}
+
+.day-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #4B0082;
+    cursor: pointer;
+}
+
+.day-name {
+    font-size: 1.1rem;
+}
+
+.day-times {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 2rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.time-input {
+    width: 120px;
+    text-align: center;
+    font-weight: 500;
+    color: #4B0082;
+}
+
+/* History */
+.history-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.history-content {
+    min-height: 400px;
+}
+
+.history-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-date {
+    font-weight: 600;
+    color: #4B0082;
+    margin-bottom: 0.25rem;
+}
+
+.history-details {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.history-stats {
+    text-align: right;
+}
+
+.history-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4B0082;
+}
+
+.history-label {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+.loading-spinner {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.loading-spinner i {
+    font-size: 2rem;
+    color: #4B0082;
+    margin-bottom: 1rem;
+}
+
+.loading-spinner p {
+    color: #666;
+    margin: 0;
+}
+
+/* Message Container */
+.message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9998;
+    max-width: 400px;
+}
+
+.message {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.message.success {
+    border-color: #27ae60;
+    background: rgba(39, 174, 96, 0.05);
+}
+
+.message.error {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.05);
+}
+
+.message.info {
+    border-color: #3498db;
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.message-icon {
+    display: inline-block;
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+.message-text {
+    font-weight: 500;
+}
+
+.message-close {
+    float: right;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    font-size: 1.2rem;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-close:hover {
+    color: #333;
+}
+
+/* Responsive adjustments for dashboard */
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: 1rem 0;
+    }
+    
+    .dashboard-header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .dashboard-user-info {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .dashboard-actions {
+        justify-content: center;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .agenda-controls,
+    .history-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .appointment-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .appointment-status {
+        text-align: center;
+    }
+    
+    .form-actions {
+        justify-content: center;
+    }
+    
+    .day-times {
+        padding-left: 0;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .message-container {
+        left: 10px;
+        right: 10px;
+        top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-tabs {
+        padding: 0.25rem;
+        gap: 0.25rem;
+    }
+    
+    .tab-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .tab-content {
+        padding: 1.5rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .day-times {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .time-input {
+        width: 150px;
+    }
+}

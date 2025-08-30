@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Massagista | Espaço VIV</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://espacoviv.com/wp-content/uploads/2018/09/icon-16.png" type="image/x-icon" />
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://espacoviv.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/font-awesome.min.css?ver=4.7.0">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, #47103C 0%, #5d1a4a 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.offline {
+            background: #dc3545;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #28a745;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(25px);
+        }
+
+        .logout-btn {
+            background: rgba(220, 53, 69, 0.2);
+            color: white;
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #dc3545;
+        }
+
+        /* Main Content */
+        .dashboard-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: #47103C;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Calendar Styles */
+        .calendar-container {
+            position: relative;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #47103C, #5d1a4a);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .calendar-nav {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-nav:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .calendar-day-header {
+            background: #47103C;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            background: white;
+            padding: 12px 8px;
+            min-height: 80px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .calendar-day:hover {
+            background: #f8f9fa;
+        }
+
+        .calendar-day.other-month {
+            background: #f5f5f5;
+            color: #999;
+        }
+
+        .calendar-day.today {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+        }
+
+        .calendar-day.available {
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+        }
+
+        .calendar-day.unavailable {
+            background: #ffeaea;
+            border-left: 4px solid #dc3545;
+        }
+
+        .day-number {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .day-status {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .day-status.available {
+            background: #28a745;
+            color: white;
+        }
+
+        .day-status.unavailable {
+            background: #dc3545;
+            color: white;
+        }
+
+        .day-appointments {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #47103C, #5d1a4a);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(71, 16, 60, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Appointments List */
+        .appointments-today {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .appointment-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .appointment-item:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .appointment-time {
+            background: #47103C;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .appointment-details h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .appointment-details p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .empty-appointments {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #47103C;
+            outline: none;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .time-slot:hover {
+            border-color: #47103C;
+            background: #f8f9fa;
+        }
+
+        .time-slot.selected {
+            background: #47103C;
+            color: white;
+            border-color: #47103C;
+        }
+
+        .time-slot.unavailable {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .btn {
+            background: #47103C;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #3c0d32;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-main {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-day {
+                min-height: 60px;
+                padding: 8px 5px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .user-info {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-day {
+                min-height: 50px;
+                font-size: 0.9rem;
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://espacoviv.com/wp-content/uploads/2019/06/logo-espaco-viv-rj.png" alt="Espaço VIV">
+                <h2>Dashboard Massagista</h2>
+            </div>
+            
+            <div class="user-info">
+                <div class="status-toggle">
+                    <span class="status-indicator" id="statusIndicator"></span>
+                    <span id="statusText">Offline</span>
+                    <div class="toggle-switch" id="statusToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <strong id="userName">Carregando...</strong>
+                    <div style="font-size: 0.9rem; opacity: 0.9;" id="userUnit">Unidade</div>
+                </div>
+                
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="dashboard-main">
+        <!-- Calendar Section -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-calendar-alt"></i>
+                Calendário de Disponibilidade
+            </h2>
+            
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button class="calendar-nav" id="prevMonth">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h3 id="currentMonth">Janeiro 2024</h3>
+                    <button class="calendar-nav" id="nextMonth">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="calendar-grid" id="calendar">
+                    <!-- Calendar will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" onclick="setWeekAvailability(true)">
+                    <i class="fas fa-check"></i> Marcar Semana como Disponível
+                </button>
+                <button class="btn btn-secondary" onclick="setWeekAvailability(false)">
+                    <i class="fas fa-times"></i> Marcar Semana como Indisponível
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Stats -->
+            <div class="content-section">
+                <h3 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Estatísticas
+                </h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayAppointments">0</div>
+                        <div class="stat-label">Hoje</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="weekAppointments">0</div>
+                        <div class="stat-label">Esta Semana</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="monthAppointments">0</div>
+                        <div class="stat-label">Este Mês</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalAppointments">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Appointments -->
+            <div class="content-section">
+                <h3 class="section-title">
+                    <i class="far fa-clock"></i>
+                    Agendamentos de Hoje
+                </h3>
+                <div class="appointments-today" id="todayAppointmentsList">
+                    <div class="empty-appointments">
+                        <i class="far fa-calendar" style="font-size: 3rem; color: #ddd; margin-bottom: 10px;"></i>
+                        <p>Nenhum agendamento para hoje</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Day Settings -->
+    <div id="dayModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 id="modalTitle">Configurar Disponibilidade</h3>
+            
+            <form id="dayForm">
+                <div class="form-group">
+                    <label>Status do Dia:</label>
+                    <select id="dayStatus" onchange="toggleTimeSlots()">
+                        <option value="available">Disponível</option>
+                        <option value="unavailable">Indisponível</option>
+                    </select>
+                </div>
+                
+                <div id="timeSlotsContainer">
+                    <div class="form-group">
+                        <label>Horários Disponíveis:</label>
+                        <div class="time-slots" id="timeSlots">
+                            <!-- Time slots will be generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentDate = new Date();
+        let selectedDay = null;
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            initializeCalendar();
+            loadUserStats();
+            loadTodayAppointments();
+            generateTimeSlots();
+        });
+        
+        function checkAuth() {
+            const user = localStorage.getItem('espacoviv_current_user');
+            if (!user) {
+                alert('Você precisa estar logado para acessar esta página!');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(user);
+            updateUserInfo();
+        }
+        
+        function updateUserInfo() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userUnit').textContent = getUnitName(currentUser.unit);
+            
+            // Update status
+            const statusToggle = document.getElementById('statusToggle');
+            const statusIndicator = document.getElementById('statusIndicator');
+            const statusText = document.getElementById('statusText');
+            
+            if (currentUser.isOnline) {
+                statusToggle.classList.add('active');
+                statusIndicator.classList.remove('offline');
+                statusText.textContent = 'Online';
+            } else {
+                statusToggle.classList.remove('active');
+                statusIndicator.classList.add('offline');
+                statusText.textContent = 'Offline';
+            }
+        }
+        
+        function getUnitName(unit) {
+            const units = {
+                'sp': 'São Paulo - Perdizes',
+                'rj': 'Rio de Janeiro - Centro',
+                'bsb': 'Brasília - SHS'
+            };
+            return units[unit] || 'Unidade não definida';
+        }
+        
+        // Status toggle
+        document.getElementById('statusToggle').onclick = function() {
+            currentUser.isOnline = !currentUser.isOnline;
+            
+            // Update localStorage
+            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('espacoviv_users', JSON.stringify(users));
+                localStorage.setItem('espacoviv_current_user', JSON.stringify(currentUser));
+            }
+            
+            updateUserInfo();
+        };
+        
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                localStorage.removeItem('espacoviv_current_user');
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // Calendar functions
+        function initializeCalendar() {
+            generateCalendar();
+            
+            document.getElementById('prevMonth').onclick = () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                generateCalendar();
+            };
+            
+            document.getElementById('nextMonth').onclick = () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                generateCalendar();
+            };
+        }
+        
+        function generateCalendar() {
+            const calendar = document.getElementById('calendar');
+            const currentMonth = document.getElementById('currentMonth');
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            currentMonth.textContent = new Date(year, month).toLocaleDateString('pt-BR', {
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            // Clear calendar
+            calendar.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                calendar.appendChild(header);
+            });
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDay = firstDay.getDay();
+            
+            // Add empty cells for previous month
+            for (let i = 0; i < startDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day other-month';
+                calendar.appendChild(emptyDay);
+            }
+            
+            // Add days of current month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                dayElement.appendChild(dayNumber);
+                
+                // Check if it's today
+                const today = new Date();
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Get availability for this day
+                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const availability = currentUser.availability[dateKey];
+                
+                if (availability) {
+                    const statusElement = document.createElement('div');
+                    statusElement.className = `day-status ${availability.status}`;
+                    statusElement.textContent = availability.status === 'available' ? 'Disponível' : 'Indisponível';
+                    dayElement.appendChild(statusElement);
+                    dayElement.classList.add(availability.status);
+                    
+                    if (availability.status === 'available' && availability.timeSlots) {
+                        const appointmentsCount = getAppointmentsForDay(dateKey).length;
+                        const availableSlots = availability.timeSlots.length - appointmentsCount;
+                        
+                        if (availableSlots > 0) {
+                            const slotsElement = document.createElement('div');
+                            slotsElement.className = 'day-appointments';
+                            slotsElement.textContent = `${availableSlots} vagas`;
+                            dayElement.appendChild(slotsElement);
+                        }
+                    }
+                }
+                
+                // Add click event
+                dayElement.onclick = () => openDayModal(year, month, day);
+                
+                calendar.appendChild(dayElement);
+            }
+        }
+        
+        function openDayModal(year, month, day) {
+            selectedDay = { year, month, day };
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            
+            document.getElementById('modalTitle').textContent = `Disponibilidade - ${day}/${month + 1}/${year}`;
+            
+            // Load current settings
+            const availability = currentUser.availability[dateKey] || { status: 'available', timeSlots: [] };
+            document.getElementById('dayStatus').value = availability.status;
+            
+            generateTimeSlots(availability.timeSlots);
+            toggleTimeSlots();
+            
+            document.getElementById('dayModal').style.display = 'block';
+        }
+        
+        function generateTimeSlots(selectedSlots = []) {
+            const container = document.getElementById('timeSlots');
+            container.innerHTML = '';
+            
+            // Generate time slots from 8:00 to 20:00
+            for (let hour = 8; hour <= 20; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+                    
+                    const slot = document.createElement('div');
+                    slot.className = 'time-slot';
+                    slot.textContent = timeString;
+                    slot.onclick = () => toggleTimeSlot(slot, timeString);
+                    
+                    if (selectedSlots.includes(timeString)) {
+                        slot.classList.add('selected');
+                    }
+                    
+                    // Check if slot is already booked
+                    const dateKey = `${selectedDay.year}-${String(selectedDay.month + 1).padStart(2, '0')}-${String(selectedDay.day).padStart(2, '0')}`;
+                    const appointments = getAppointmentsForDay(dateKey);
+                    if (appointments.some(apt => apt.time === timeString)) {
+                        slot.classList.add('unavailable');
+                        slot.onclick = null;
+                    }
+                    
+                    container.appendChild(slot);
+                }
+            }
+        }
+        
+        function toggleTimeSlot(element, timeString) {
+            element.classList.toggle('selected');
+        }
+        
+        function toggleTimeSlots() {
+            const status = document.getElementById('dayStatus').value;
+            const container = document.getElementById('timeSlotsContainer');
+            container.style.display = status === 'available' ? 'block' : 'none';
+        }
+        
+        function getAppointmentsForDay(dateKey) {
+            // Get all appointments for this massagist on this date
+            const allAppointments = JSON.parse(localStorage.getItem('espacoviv_appointments') || '[]');
+            return allAppointments.filter(apt => 
+                apt.massagistId === currentUser.id && 
+                apt.date === dateKey && 
+                apt.status !== 'cancelled'
+            );
+        }
+        
+        // Form submission
+        document.getElementById('dayForm').onsubmit = function(e) {
+            e.preventDefault();
+            
+            const dateKey = `${selectedDay.year}-${String(selectedDay.month + 1).padStart(2, '0')}-${String(selectedDay.day).padStart(2, '0')}`;
+            const status = document.getElementById('dayStatus').value;
+            
+            let timeSlots = [];
+            if (status === 'available') {
+                timeSlots = Array.from(document.querySelectorAll('.time-slot.selected:not(.unavailable)')).map(slot => slot.textContent);
+            }
+            
+            // Update user availability
+            if (!currentUser.availability) {
+                currentUser.availability = {};
+            }
+            
+            currentUser.availability[dateKey] = {
+                status: status,
+                timeSlots: timeSlots
+            };
+            
+            // Update localStorage
+            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('espacoviv_users', JSON.stringify(users));
+                localStorage.setItem('espacoviv_current_user', JSON.stringify(currentUser));
+            }
+            
+            // Regenerate calendar and close modal
+            generateCalendar();
+            closeModal();
+            
+            alert('Disponibilidade atualizada com sucesso!');
+        };
+        
+        function closeModal() {
+            document.getElementById('dayModal').style.display = 'none';
+        }
+        
+        function setWeekAvailability(available) {
+            const startOfWeek = new Date(currentDate);
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startOfWeek);
+                date.setDate(startOfWeek.getDate() + i);
+                
+                const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                
+                if (!currentUser.availability) {
+                    currentUser.availability = {};
+                }
+                
+                if (available) {
+                    // Set available with default time slots
+                    const defaultSlots = [];
+                    for (let hour = 9; hour <= 18; hour++) {
+                        defaultSlots.push(`${String(hour).padStart(2, '0')}:00`);
+                    }
+                    
+                    currentUser.availability[dateKey] = {
+                        status: 'available',
+                        timeSlots: defaultSlots
+                    };
+                } else {
+                    currentUser.availability[dateKey] = {
+                        status: 'unavailable',
+                        timeSlots: []
+                    };
+                }
+            }
+            
+            // Update localStorage
+            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('espacoviv_users', JSON.stringify(users));
+                localStorage.setItem('espacoviv_current_user', JSON.stringify(currentUser));
+            }
+            
+            generateCalendar();
+            alert(`Semana marcada como ${available ? 'disponível' : 'indisponível'}!`);
+        }
+        
+        function loadUserStats() {
+            const allAppointments = JSON.parse(localStorage.getItem('espacoviv_appointments') || '[]');
+            const userAppointments = allAppointments.filter(apt => apt.massagistId === currentUser.id);
+            
+            const today = new Date();
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            
+            const todayKey = today.toISOString().split('T')[0];
+            
+            const todayCount = userAppointments.filter(apt => apt.date === todayKey).length;
+            const weekCount = userAppointments.filter(apt => {
+                const aptDate = new Date(apt.date);
+                return aptDate >= startOfWeek && aptDate <= endOfWeek;
+            }).length;
+            const monthCount = userAppointments.filter(apt => {
+                const aptDate = new Date(apt.date);
+                return aptDate >= startOfMonth && aptDate <= endOfMonth;
+            }).length;
+            
+            document.getElementById('todayAppointments').textContent = todayCount;
+            document.getElementById('weekAppointments').textContent = weekCount;
+            document.getElementById('monthAppointments').textContent = monthCount;
+            document.getElementById('totalAppointments').textContent = userAppointments.length;
+        }
+        
+        function loadTodayAppointments() {
+            const allAppointments = JSON.parse(localStorage.getItem('espacoviv_appointments') || '[]');
+            const todayKey = new Date().toISOString().split('T')[0];
+            const todayAppointments = allAppointments.filter(apt => 
+                apt.massagistId === currentUser.id && 
+                apt.date === todayKey &&
+                apt.status !== 'cancelled'
+            ).sort((a, b) => a.time.localeCompare(b.time));
+            
+            const container = document.getElementById('todayAppointmentsList');
+            
+            if (todayAppointments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-appointments">
+                        <i class="far fa-calendar" style="font-size: 3rem; color: #ddd; margin-bottom: 10px;"></i>
+                        <p>Nenhum agendamento para hoje</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            todayAppointments.forEach(apt => {
+                const item = document.createElement('div');
+                item.className = 'appointment-item';
+                item.innerHTML = `
+                    <div class="appointment-time">${apt.time}</div>
+                    <div class="appointment-details">
+                        <h4>${apt.clientName}</h4>
+                        <p>${apt.service} - ${apt.phone}</p>
+                        ${apt.notes ? `<p style="font-style: italic; color: #888;">${apt.notes}</p>` : ''}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        // Modal close events
+        document.querySelectorAll('.modal-close').forEach(close => {
+            close.onclick = closeModal;
+        });
+        
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
