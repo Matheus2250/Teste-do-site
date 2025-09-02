@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:espacoviv.com)"
+      "WebFetch(domain:espacoviv.com)",
+      "Bash(dir /b)",
+      "Bash(move:*)",
+      "Bash(tree:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

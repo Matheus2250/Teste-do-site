@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>São Paulo - Espaço VIV</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://espacoviv.com/wp-content/uploads/2018/09/icon-16.png" type="image/x-icon" />
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Header */
+        .fusion-header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .fusion-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .fusion-main-menu ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+        
+        .fusion-main-menu a {
+            color: #333;
+            text-decoration: none;
+            padding: 20px 0;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .fusion-main-menu a:hover {
+            color: #47103C;
+        }
+        
+        .fusion-main-menu .current-menu-item a {
+            color: #47103C;
+            border-bottom: 3px solid #47103C;
+        }
+        
+        /* Breadcrumb */
+        .fusion-page-title-bar {
+            background: #f8f9fa;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .fusion-breadcrumbs {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .breadcrumb-leaf {
+            color: #47103C;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .elementor-heading-title {
+            font-family: 'Roboto Slab', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #47103C;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        /* Unidade Section */
+        .unidade-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .unidade-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 400px;
+        }
+        
+        .unidade-info {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .unidade-info h3 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #47103C;
+            margin-bottom: 20px;
+        }
+        
+        .unidade-info p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .contact-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+        
+        .contact-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #47103C;
+            font-weight: 500;
+        }
+        
+        .contact-list i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .unidade-map {
+            background: #f0f0f0;
+            position: relative;
+        }
+        
+        .unidade-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            min-height: 400px;
+        }
+        
+        /* Footer */
+        .fusion-footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .fusion-main-menu {
+                display: none;
+            }
+            
+            .unidade-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .unidade-info {
+                padding: 30px 20px;
+            }
+            
+            .unidade-info h3 {
+                font-size: 1.5rem;
+            }
+            
+            .elementor-heading-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="fusion-header">
+        <div class="fusion-header-content">
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="https://espacoviv.com/wp-content/uploads/2019/06/logo-espaco-viv-rj.png" alt="Espaço VIV">
+                </a>
+            </div>
+            
+            <nav class="fusion-main-menu">
+                <ul>
+                    <li><a href="../index.html">Início</a></li>
+                    <li class="current-menu-item"><a href="../index.html#unidades">Unidades</a></li>
+                    <li><a href="../massagens.html">Massagens</a></li>
+                    <li><a href="../promocoes.html">Promoções</a></li>
+                    <li><a href="../cursos.html">Cursos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Breadcrumb -->
+    <div class="fusion-page-title-bar">
+        <nav class="fusion-breadcrumbs">
+            <a href="../index.html">Início</a> > <a href="../index.html#unidades">Unidades</a> > <span class="breadcrumb-leaf">São Paulo</span>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="elementor-heading-title">Unidades São Paulo</h1>
+        
+        <!-- Ingleses [Matriz] -->
+        <section class="unidade-section">
+            <div class="unidade-content">
+                <div class="unidade-info">
+                    <h3>Ingleses [Matriz]</h3>
+                    <p>Rua dos Ingleses, 325 – Bela Vista, São Paulo – SP, 01329-030</p>
+                    
+                    <ul class="contact-list">
+                        <li><i class="fas fa-phone-alt"></i> (11) 93387-6643</li>
+                        <li><i class="fab fa-whatsapp"></i> (11) 3086-2699</li>
+                    </ul>
+                </div>
+                <div class="unidade-map">
+                    <iframe loading="lazy"
+                            src="https://maps.google.com/maps?q=Rua%20dos%20Ingleses%2C%20325%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2001329-030&t=m&z=15&output=embed&iwloc=near"
+                            title="Rua dos Ingleses, 325 - Bela Vista, São Paulo - SP, 01329-030"
+                            aria-label="Rua dos Ingleses, 325 - Bela Vista, São Paulo - SP, 01329-030">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Perdizes -->
+        <section class="unidade-section">
+            <div class="unidade-content">
+                <div class="unidade-info">
+                    <h3>Perdizes</h3>
+                    <p>R. Tavares Bastos, 564 – Perdizes, São Paulo – SP, 05012-020</p>
+                    <p><strong>Horário de funcionamento:</strong><br>Aberto 24 horas</p>
+                </div>
+                <div class="unidade-map">
+                    <iframe loading="lazy"
+                            src="https://maps.google.com/maps?q=R.%20Tavares%20Bastos%2C%20564%20-%20Perdizes%2C%20S%C3%A3o%20Paulo&t=m&z=15&output=embed&iwloc=near"
+                            title="R. Tavares Bastos, 564 - Perdizes, São Paulo"
+                            aria-label="R. Tavares Bastos, 564 - Perdizes, São Paulo">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Vila Clementino -->
+        <section class="unidade-section">
+            <div class="unidade-content">
+                <div class="unidade-info">
+                    <h3>Vila Clementino</h3>
+                    <p>R. Dr. Bacelar, 82 – Vila Clementino, São Paulo – SP</p>
+                    <p><strong>Horário de funcionamento:</strong><br>Aberto 24 horas</p>
+                </div>
+                <div class="unidade-map">
+                    <iframe loading="lazy"
+                            src="https://maps.google.com/maps?q=R.%20Dr.%20Bacelar%2C%2082%20-%20Vila%20Clementino%2C%20S%C3%A3o%20Paulo&t=m&z=15&output=embed&iwloc=near"
+                            title="R. Dr. Bacelar, 82 - Vila Clementino, São Paulo"
+                            aria-label="R. Dr. Bacelar, 82 - Vila Clementino, São Paulo">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Prudente de Moraes -->
+        <section class="unidade-section">
+            <div class="unidade-content">
+                <div class="unidade-info">
+                    <h3>Prudente de Moraes</h3>
+                    <p>R. Prudente de Moraes Neto, 81 São Paulo – SP</p>
+                    <p><strong>Horário de funcionamento:</strong><br>Aberto 24 horas</p>
+                </div>
+                <div class="unidade-map">
+                    <iframe loading="lazy"
+                            src="https://maps.google.com/maps?q=R.%20Prudente%20de%20Moraes%20Neto%2C%2081%20S%C3%A3o%20Paulo%20-%20SP&t=m&z=15&output=embed&iwloc=near"
+                            title="R. Prudente de Moraes Neto, 81 São Paulo - SP"
+                            aria-label="R. Prudente de Moraes Neto, 81 São Paulo - SP">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="fusion-footer">
+        <p>&copy; 2024 Espaço VIV. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos - Espaço VIV</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://espacoviv.com/wp-content/uploads/2018/09/icon-16.png" type="image/x-icon" />
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Header */
+        .fusion-header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .fusion-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .fusion-main-menu ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+        
+        .fusion-main-menu a {
+            color: #333;
+            text-decoration: none;
+            padding: 20px 0;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .fusion-main-menu a:hover {
+            color: #47103C;
+        }
+        
+        .fusion-main-menu .current-menu-item a {
+            color: #47103C;
+            border-bottom: 3px solid #47103C;
+        }
+        
+        /* Breadcrumb */
+        .fusion-page-title-bar {
+            background: #f8f9fa;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .fusion-breadcrumbs {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .breadcrumb-leaf {
+            color: #47103C;
+            font-weight: 600;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #47103C, #6b1a52);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero-title {
+            font-family: 'Roboto Slab', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #fff;
+            color: #47103C;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            color: #47103C;
+        }
+        
+        .cta-button i {
+            margin-right: 10px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .section-title {
+            font-family: 'Roboto Slab', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #47103C;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        /* Benefits Section */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+        
+        .benefit-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            background: #47103C;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .benefit-card h3 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 1.5rem;
+            color: #47103C;
+            margin-bottom: 15px;
+        }
+        
+        .benefit-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Course Info Section */
+        .course-info {
+            background: #f8f9fa;
+            padding: 60px 0;
+            margin: 60px -20px;
+        }
+        
+        .course-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .course-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .course-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .course-details h3 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 2rem;
+            color: #47103C;
+            margin-bottom: 30px;
+        }
+        
+        .course-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .course-features li {
+            padding: 10px 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+        
+        .course-features li i {
+            color: #47103C;
+            margin-right: 15px;
+            width: 20px;
+        }
+        
+        .earnings-highlight {
+            background: linear-gradient(135deg, #47103C, #6b1a52);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .earnings-highlight h4 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .earnings-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffd700;
+        }
+        
+        /* CTA Section */
+        .final-cta {
+            background: #47103C;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin: 60px -20px 0;
+        }
+        
+        .final-cta h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .final-cta p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        /* Footer */
+        .fusion-footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .fusion-main-menu {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .course-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .benefit-card {
+                padding: 30px 20px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .earnings-amount {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="fusion-header">
+        <div class="fusion-header-content">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="https://espacoviv.com/wp-content/uploads/2019/06/logo-espaco-viv-rj.png" alt="Espaço VIV">
+                </a>
+            </div>
+            
+            <nav class="fusion-main-menu">
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#unidades">Unidades</a></li>
+                    <li><a href="massagens.html">Massagens</a></li>
+                    <li><a href="promocoes.html">Promoções</a></li>
+                    <li class="current-menu-item"><a href="cursos.html">Cursos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Breadcrumb -->
+    <div class="fusion-page-title-bar">
+        <nav class="fusion-breadcrumbs">
+            <a href="index.html">Início</a> > <span class="breadcrumb-leaf">Cursos</span>
+        </nav>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">GANHE R$3.000 A R$10.000 POR MÊS COMO MASSOTERAPEUTA</h1>
+            <p class="hero-subtitle">
+                Transforme sua paixão por cuidar dos outros em uma fonte de renda significativa.<br>
+                Torne-se um profissional qualificado e conquiste sua independência financeira.
+            </p>
+            <a href="#inscricao" class="cta-button">
+                <i class="fab fa-whatsapp"></i>
+                Faça Sua Inscrição
+            </a>
+        </div>
+    </section>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <h2 class="section-title">Por que escolher a Massoterapia?</h2>
+        
+        <!-- Benefits Grid -->
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Alta Demanda</h3>
+                <p>Com a crescente conscientização sobre saúde e bem-estar, a demanda por massoterapeutas está em constante crescimento. As pessoas buscam alternativas naturais para aliviar o estresse e as dores do corpo.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <h3>Ótimo Retorno Financeiro</h3>
+                <p>Ganhe de R$3.000 a R$10.000 por mês, dependendo do seu empenho e da clientela que você conquistar. A massoterapia oferece uma oportunidade real de construir uma carreira financeiramente recompensadora.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Flexibilidade de Horários</h3>
+                <p>Tenha liberdade para definir seus próprios horários de trabalho. Atenda em clínicas, spas, domicílio ou abra seu próprio consultório. A massoterapia oferece diversas possibilidades de atuação.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Satisfação Pessoal</h3>
+                <p>Trabalhe fazendo o que ama: cuidando das pessoas e proporcionando bem-estar. A satisfação de ver seus clientes relaxados e aliviados de suas dores é incomparável.</p>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Course Info Section -->
+    <section class="course-info">
+        <div class="course-content">
+            <div class="course-image">
+                <img src="images/program_massageTherapist.jpg" alt="Programa de Massoterapia">
+            </div>
+            
+            <div class="course-details">
+                <h3>Nosso Programa de Formação</h3>
+                
+                <div class="earnings-highlight">
+                    <h4>Potencial de Ganhos</h4>
+                    <div class="earnings-amount">R$ 3.000 - R$ 10.000/mês</div>
+                </div>
+                
+                <ul class="course-features">
+                    <li><i class="fas fa-graduation-cap"></i> Certificação reconhecida nacionalmente</li>
+                    <li><i class="fas fa-users"></i> Instrutores experientes e qualificados</li>
+                    <li><i class="fas fa-hands"></i> Prática supervisionada com clientes reais</li>
+                    <li><i class="fas fa-book"></i> Material didático completo incluso</li>
+                    <li><i class="fas fa-calendar-check"></i> Horários flexíveis - manhã, tarde e noite</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Unidades em SP, RJ e Brasília</li>
+                    <li><i class="fas fa-handshake"></i> Suporte para inserção no mercado</li>
+                    <li><i class="fas fa-award"></i> Técnicas modernas e tradicionais</li>
+                </ul>
+                
+                <p style="color: #666; margin-bottom: 30px;">
+                    Nosso curso abrange desde técnicas básicas de relaxamento até especializações em 
+                    massagem terapêutica, drenagem linfática, shiatsu e muito mais.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Final CTA -->
+    <section class="final-cta" id="inscricao">
+        <div style="max-width: 800px; margin: 0 auto; padding: 0 20px;">
+            <h3>Pronto para Transformar sua Vida?</h3>
+            <p>Não perca esta oportunidade única de construir uma carreira de sucesso na área da saúde e bem-estar. Entre em contato conosco e dê o primeiro passo rumo à sua independência profissional.</p>
+            
+            <a href="https://wa.me/5511933876643?text=Olá! Gostaria de saber mais sobre o curso de Massoterapia." class="cta-button" style="background: #25d366; color: white;">
+                <i class="fab fa-whatsapp"></i>
+                Fale Conosco pelo WhatsApp
+            </a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="fusion-footer">
+        <p>&copy; 2024 Espaço VIV. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
