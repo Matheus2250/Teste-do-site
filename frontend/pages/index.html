@@ -2037,6 +2037,80 @@
                 }
             });
         });
+
+        // Adicionar seção de teste de APIs (somente no localhost)
+        if (window.location.hostname === 'localhost') {
+            addAPITestSection();
+        }
+
+        function addAPITestSection() {
+            const testSection = document.createElement('div');
+            testSection.innerHTML = `
+                <div style="position: fixed; top: 10px; right: 10px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10000; max-width: 300px;">
+                    <h4 style="margin: 0 0 15px 0; color: #2c5530;">🧪 Teste das APIs</h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button onclick="testAPI('health')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Health Check</button>
+                        <button onclick="testAPI('units')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Unidades</button>
+                        <button onclick="testAPI('services')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Serviços</button>
+                        <button onclick="testAPI('password')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Validar Senha</button>
+                        <button onclick="testAPI('calendar')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Calendário</button>
+                        <button onclick="testAPI('next-slot')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Próximo Slot</button>
+                    </div>
+                    <div id="apiResults" style="margin-top: 15px; max-height: 200px; overflow-y: auto; font-size: 12px; background: #f8f9fa; padding: 8px; border-radius: 4px; display: none;"></div>
+                </div>
+            `;
+            document.body.appendChild(testSection);
+        }
+
+        // Initialize app with API integration
+        window.app = new EspacoVivApp();
+
+        async function testAPI(type) {
+            const resultsDiv = document.getElementById('apiResults');
+            resultsDiv.style.display = 'block';
+            
+            try {
+                let result;
+                const api = window.app?.api || new APIService();
+                
+                switch(type) {
+                    case 'health':
+                        result = await api.request('/health');
+                        break;
+                    case 'units':
+                        result = await api.getUnits();
+                        break;
+                    case 'services':
+                        result = await api.getServices();
+                        break;
+                    case 'password':
+                        result = await api.validatePassword('MinhaSenh@123');
+                        break;
+                    case 'calendar':
+                        const today = new Date().toISOString().split('T')[0];
+                        result = await api.getDayAvailability('sp-perdizes', today);
+                        break;
+                    case 'next-slot':
+                        result = await api.getNextAvailableSlot('sp-perdizes');
+                        break;
+                }
+                
+                resultsDiv.innerHTML = `
+                    <strong style="color: green;">✅ ${type.toUpperCase()} OK</strong><br>
+                    <pre style="white-space: pre-wrap; margin: 5px 0;">${JSON.stringify(result, null, 2)}</pre>
+                    ${resultsDiv.innerHTML}
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <strong style="color: red;">❌ ${type.toUpperCase()} ERROR</strong><br>
+                    <span style="color: red;">${error.message}</span><br>
+                    ${resultsDiv.innerHTML}
+                `;
+            }
+        }
     </script>
+
+    <!-- Include main.js with API integration -->
+    <script src="../js/main.js"></script>
 </body>
 </html>

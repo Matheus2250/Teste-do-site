@@ -7,7 +7,12 @@
       "Bash(tree:*)",
       "Bash(ls:*)",
       "Bash(grep:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(curl:*)",
+      "Bash(start dashboard-novo.html)",
+      "Bash(start index.html)"
     ],
     "deny": [],
     "ask": []

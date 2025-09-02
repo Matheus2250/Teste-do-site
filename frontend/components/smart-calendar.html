@@ -1,0 +1,647 @@
+<!-- Componente de Calendário Inteligente -->
+<div id="smartCalendar" class="smart-calendar">
+    <!-- Cabeçalho do Calendário -->
+    <div class="calendar-header">
+        <div class="calendar-controls">
+            <div class="view-selector">
+                <button class="view-btn active" data-view="day">Dia</button>
+                <button class="view-btn" data-view="week">Semana</button>
+                <button class="view-btn" data-view="month">Mês</button>
+            </div>
+            
+            <div class="date-navigation">
+                <button class="nav-btn" id="prevDate">‹</button>
+                <h2 id="currentDateTitle">Hoje</h2>
+                <button class="nav-btn" id="nextDate">›</button>
+            </div>
+
+            <div class="calendar-actions">
+                <select id="unitSelector" class="unit-select">
+                    <option value="">Todas as unidades</option>
+                </select>
+                <button class="action-btn" id="refreshCalendar">🔄</button>
+                <button class="action-btn" id="todayBtn">Hoje</button>
+            </div>
+        </div>
+
+        <!-- Filtros Avançados -->
+        <div class="calendar-filters" id="calendarFilters" style="display: none;">
+            <div class="filter-group">
+                <label for="massagistaFilter">Massagista:</label>
+                <select id="massagistaFilter">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="serviceFilter">Serviço:</label>
+                <select id="serviceFilter">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <button class="filter-toggle" id="toggleFilters">🔽 Filtros</button>
+                <button class="action-btn" id="exportBtn">📥 Exportar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicador de Carregamento -->
+    <div class="loading-indicator" id="calendarLoading" style="display: none;">
+        <div class="spinner-large"></div>
+        <p>Carregando calendário...</p>
+    </div>
+
+    <!-- Resumo de Estatísticas -->
+    <div class="calendar-stats" id="calendarStats">
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-info">
+                <span class="stat-value" id="totalSlots">-</span>
+                <span class="stat-label">Total de Slots</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+                <span class="stat-value" id="bookedSlots">-</span>
+                <span class="stat-label">Agendados</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">🟢</div>
+            <div class="stat-info">
+                <span class="stat-value" id="availableSlots">-</span>
+                <span class="stat-label">Disponíveis</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-info">
+                <span class="stat-value" id="revenueEstimate">R$ -</span>
+                <span class="stat-label">Receita Est.</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+                <span class="stat-value" id="occupancyRate">-%</span>
+                <span class="stat-label">Ocupação</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal do Calendário -->
+    <div class="calendar-content">
+        
+        <!-- Visão de Dia -->
+        <div id="dayView" class="calendar-view active">
+            <div class="day-header">
+                <h3 id="dayTitle">Hoje</h3>
+                <div class="day-actions">
+                    <button class="action-btn" id="findNextSlot">🔍 Próximo Disponível</button>
+                    <button class="action-btn" id="addBooking">➕ Agendar</button>
+                </div>
+            </div>
+            
+            <div class="time-slots" id="timeSlots">
+                <!-- Slots serão carregados dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Visão de Semana -->
+        <div id="weekView" class="calendar-view">
+            <div class="week-header" id="weekHeader">
+                <!-- Cabeçalho da semana será gerado -->
+            </div>
+            
+            <div class="week-grid" id="weekGrid">
+                <!-- Grid da semana será gerado -->
+            </div>
+        </div>
+
+        <!-- Visão de Mês -->
+        <div id="monthView" class="calendar-view">
+            <div class="month-header">
+                <div class="weekday-labels">
+                    <span>Dom</span>
+                    <span>Seg</span>
+                    <span>Ter</span>
+                    <span>Qua</span>
+                    <span>Qui</span>
+                    <span>Sex</span>
+                    <span>Sáb</span>
+                </div>
+            </div>
+            
+            <div class="month-grid" id="monthGrid">
+                <!-- Grid do mês será gerado -->
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal de Próximo Slot Disponível -->
+<div id="nextSlotModal" class="modal">
+    <div class="modal-content small">
+        <span class="modal-close">&times;</span>
+        <h3>🔍 Próximo Slot Disponível</h3>
+        
+        <div id="nextSlotResult">
+            <!-- Resultado será carregado -->
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeModal('nextSlotModal')">Fechar</button>
+            <button class="btn-primary" id="bookNextSlot">Agendar Este Horário</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalhes do Slot -->
+<div id="slotDetailsModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3 id="slotModalTitle">Detalhes do Horário</h3>
+        
+        <div id="slotDetails">
+            <!-- Detalhes serão carregados -->
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeModal('slotDetailsModal')">Fechar</button>
+            <button class="btn-danger" id="cancelBooking" style="display: none;">Cancelar Agendamento</button>
+            <button class="btn-primary" id="bookSlot" style="display: none;">Agendar Horário</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.smart-calendar {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.calendar-header {
+    background: linear-gradient(135deg, #2c5530, #6b8e23);
+    color: white;
+    padding: 20px;
+}
+
+.calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.view-selector {
+    display: flex;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.view-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-btn.active {
+    background: rgba(255,255,255,0.2);
+    font-weight: 600;
+}
+
+.date-navigation {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+#currentDateTitle {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    min-width: 200px;
+    text-align: center;
+}
+
+.calendar-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.unit-select {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: white;
+    color: #333;
+}
+
+.action-btn {
+    padding: 8px 15px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.calendar-filters {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.filter-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.filter-group label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.filter-group select {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    background: white;
+    color: #333;
+}
+
+.loading-indicator {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.spinner-large {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e0e0e0;
+    border-top: 4px solid #6b8e23;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.calendar-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f8f0;
+    border-radius: 50%;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c5530;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #666;
+}
+
+.calendar-content {
+    padding: 20px;
+    min-height: 400px;
+}
+
+.calendar-view {
+    display: none;
+}
+
+.calendar-view.active {
+    display: block;
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.day-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.time-slots {
+    display: grid;
+    gap: 10px;
+}
+
+.time-slot {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.time-slot.available {
+    border-color: #28a745;
+    background: #f8fff8;
+}
+
+.time-slot.available:hover {
+    background: #e8f5e8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.time-slot.booked {
+    border-color: #dc3545;
+    background: #fff8f8;
+}
+
+.time-slot.booked:hover {
+    background: #ffe8e8;
+}
+
+.slot-time {
+    font-size: 18px;
+    font-weight: 600;
+    margin-right: 20px;
+    min-width: 80px;
+}
+
+.slot-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.slot-client {
+    font-weight: 500;
+    color: #333;
+}
+
+.slot-service {
+    font-size: 14px;
+    color: #666;
+}
+
+.slot-massagista {
+    font-size: 12px;
+    color: #888;
+}
+
+.slot-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 80px;
+}
+
+.slot-status.available {
+    background: #28a745;
+    color: white;
+}
+
+.slot-status.booked {
+    background: #dc3545;
+    color: white;
+}
+
+.week-grid, .month-grid {
+    display: grid;
+    gap: 1px;
+    background: #e0e0e0;
+    border: 1px solid #e0e0e0;
+}
+
+.week-grid {
+    grid-template-columns: repeat(7, 1fr);
+    min-height: 300px;
+}
+
+.month-grid {
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    min-height: 400px;
+}
+
+.week-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+}
+
+.weekday-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #e0e0e0;
+    margin-bottom: 10px;
+}
+
+.weekday-labels span {
+    padding: 10px;
+    background: #f8f9fa;
+    text-align: center;
+    font-weight: 600;
+    color: #666;
+}
+
+.day-cell {
+    background: white;
+    padding: 10px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.day-cell:hover {
+    background: #f8f9fa;
+}
+
+.day-cell.other-month {
+    background: #fafafa;
+    color: #ccc;
+}
+
+.day-cell.today {
+    background: #e8f5e8;
+    border: 2px solid #28a745;
+}
+
+.day-number {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.day-bookings {
+    font-size: 12px;
+    color: #666;
+}
+
+.modal.small .modal-content {
+    max-width: 500px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.btn-primary {
+    background: #6b8e23;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #5a7a1f;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .calendar-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .date-navigation {
+        justify-content: center;
+    }
+    
+    .calendar-actions {
+        justify-content: center;
+    }
+    
+    .calendar-filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .calendar-stats {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    
+    .day-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .day-actions {
+        justify-content: center;
+    }
+}
+</style>

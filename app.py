@@ -15,9 +15,9 @@ os.environ.setdefault("ENVIRONMENT", "production")
 # Importar a aplicação
 try:
     from app.main_simple_render import app
-    print("✅ Aplicação Render carregada com sucesso!")
+    print("Aplicacao Render carregada com sucesso!")
 except ImportError as e:
-    print(f"❌ Erro ao importar aplicação: {e}")
+    print(f"Erro ao importar aplicacao: {e}")
     # Fallback para aplicação de emergência
     from fastapi import FastAPI
     

@@ -1,6 +1,89 @@
+// API Service Integration
+class APIService {
+    constructor() {
+        this.baseURL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:10000/api'
+            : 'https://site-kzxm.onrender.com/api';
+        
+        this.token = localStorage.getItem('espacoviv_token');
+        this.headers = { 'Content-Type': 'application/json' };
+        
+        if (this.token) {
+            this.headers.Authorization = `Bearer ${this.token}`;
+        }
+    }
+
+    async request(endpoint, options = {}) {
+        const url = `${this.baseURL}${endpoint}`;
+        const config = { headers: { ...this.headers }, ...options };
+
+        try {
+            const response = await fetch(url, config);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ 
+                    message: `HTTP Error: ${response.status}` 
+                }));
+                throw new Error(errorData.message || errorData.detail || 'Erro na API');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    }
+
+    // Auth methods
+    async register(userData) {
+        return await this.request('/auth/register', {
+            method: 'POST', body: JSON.stringify(userData)
+        });
+    }
+
+    async login(credentials) {
+        const response = await this.request('/auth/login', {
+            method: 'POST', body: JSON.stringify(credentials)
+        });
+        if (response.access_token) {
+            this.token = response.access_token;
+            localStorage.setItem('espacoviv_token', this.token);
+            this.headers.Authorization = `Bearer ${this.token}`;
+        }
+        return response;
+    }
+
+    async validatePassword(password) {
+        return await this.request('/auth/validate-password', {
+            method: 'POST', body: JSON.stringify({ password })
+        });
+    }
+
+    async getUnits() {
+        return await this.request('/units');
+    }
+
+    async getServices() {
+        return await this.request('/services');
+    }
+
+    async getDayAvailability(unitCode, date) {
+        return await this.request(`/calendar/availability/day/${unitCode}/${date}`);
+    }
+
+    async getNextAvailableSlot(unitCode) {
+        return await this.request(`/calendar/next-available/${unitCode}`);
+    }
+
+    async createBooking(bookingData) {
+        return await this.request('/bookings', {
+            method: 'POST', body: JSON.stringify(bookingData)
+        });
+    }
+}
+
 // Main application initialization
 class EspacoVivApp {
     constructor() {
+        this.api = new APIService();
         this.init();
     }
     
