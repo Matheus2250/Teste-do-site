@@ -6,7 +6,8 @@
       "Bash(move:*)",
       "Bash(tree:*)",
       "Bash(ls:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

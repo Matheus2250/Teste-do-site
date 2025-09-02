@@ -1,38 +1,309 @@
-/**
- * Espaço VIV - Website Principal (Avada Style)
- * JavaScript principal para funcionalidades do site com estrutura Avada/Elementor
- */
+// Main application initialization
+class EspacoVivApp {
+    constructor() {
+        this.init();
+    }
+    
+    init() {
+        this.initializeSwiper();
+        this.bindGlobalEvents();
+        this.loadComponents();
+    }
+    
+    initializeSwiper() {
+        // Initialize Swiper for hero section
+        if (document.querySelector('.heroSwiper')) {
+            const swiper = new Swiper('.heroSwiper', {
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                effect: 'fade',
+                fadeEffect: {
+                    crossFade: true
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+        }
+    }
+    
+    bindGlobalEvents() {
+        // Modal close events
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-close')) {
+                const modal = e.target.closest('.modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
+            
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+        
+        // Agendamento button
+        const agendarBtn = document.getElementById('agendarBtn');
+        if (agendarBtn) {
+            agendarBtn.addEventListener('click', () => {
+                if (typeof bookingModal !== 'undefined') {
+                    bookingModal.openModal();
+                }
+            });
+        }
+        
+        // Form submissions
+        this.bindFormSubmissions();
+    }
+    
+    bindFormSubmissions() {
+        // Booking form
+        const agendamentoForm = document.getElementById('agendamentoForm');
+        if (agendamentoForm) {
+            agendamentoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (typeof bookingModal !== 'undefined') {
+                    const formData = new FormData(e.target);
+                    const success = await bookingModal.submitBooking(formData);
+                    
+                    if (success) {
+                        e.target.reset();
+                    }
+                }
+            });
+        }
+    }
+    
+    loadComponents() {
+        // Load required components based on page
+        const currentPage = this.getCurrentPage();
+        
+        switch (currentPage) {
+            case 'dashboard':
+                this.loadDashboardComponents();
+                break;
+            case 'promocoes':
+                this.loadPromocaoComponents();
+                break;
+            default:
+                // Default components for all pages
+                break;
+        }
+    }
+    
+    getCurrentPage() {
+        const path = window.location.pathname;
+        const page = path.split('/').pop().replace('.html', '');
+        return page || 'index';
+    }
+    
+    loadDashboardComponents() {
+        // Dashboard specific initialization
+        if (typeof userAuth !== 'undefined' && !userAuth.isLoggedIn()) {
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        this.initializeDashboard();
+    }
+    
+    loadPromocaoComponents() {
+        // Promocoes specific initialization
+        this.bindPromocaoEvents();
+    }
+    
+    bindPromocaoEvents() {
+        // Promocao buttons
+        document.querySelectorAll('.promocao-action').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const promocaoTitle = button.closest('.promocao-card').querySelector('h3').textContent;
+                if (typeof bookingModal !== 'undefined') {
+                    bookingModal.openModal(promocaoTitle);
+                }
+            });
+        });
+    }
+    
+    initializeDashboard() {
+        this.loadCalendar();
+        this.loadAppointments();
+        this.bindDashboardEvents();
+    }
+    
+    async loadCalendar() {
+        const calendarContainer = document.getElementById('calendar-container');
+        if (!calendarContainer) return;
+        
+        try {
+            const response = await fetch('/api/massagista/appointments/calendar');
+            const appointments = await response.json();
+            
+            this.renderCalendar(appointments);
+        } catch (error) {
+            console.error('Erro ao carregar calendário:', error);
+        }
+    }
+    
+    async loadAppointments() {
+        const appointmentsList = document.getElementById('appointments-list');
+        if (!appointmentsList) return;
+        
+        try {
+            const response = await fetch('/api/massagista/appointments');
+            const appointments = await response.json();
+            
+            this.renderAppointments(appointments);
+        } catch (error) {
+            console.error('Erro ao carregar agendamentos:', error);
+        }
+    }
+    
+    renderCalendar(appointments) {
+        const calendarContainer = document.getElementById('calendar-container');
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        
+        // Simple calendar implementation
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        let calendarHTML = '<div class="calendar-grid">';
+        
+        // Header
+        calendarHTML += '<div class="calendar-header">';
+        calendarHTML += `<h3>${this.getMonthName(currentMonth)} ${currentYear}</h3>`;
+        calendarHTML += '</div>';
+        
+        // Days of week
+        const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        calendarHTML += '<div class="calendar-days-header">';
+        daysOfWeek.forEach(day => {
+            calendarHTML += `<div class="calendar-day-header">${day}</div>`;
+        });
+        calendarHTML += '</div>';
+        
+        // Calendar days
+        calendarHTML += '<div class="calendar-days">';
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(currentYear, currentMonth, day);
+            const dateStr = date.toISOString().split('T')[0];
+            const dayAppointments = appointments.filter(apt => apt.appointment_date === dateStr);
+            
+            calendarHTML += `<div class="calendar-day ${dayAppointments.length > 0 ? 'has-appointments' : ''}" data-date="${dateStr}">`;
+            calendarHTML += `<span class="day-number">${day}</span>`;
+            if (dayAppointments.length > 0) {
+                calendarHTML += `<span class="appointment-count">${dayAppointments.length}</span>`;
+            }
+            calendarHTML += '</div>';
+        }
+        calendarHTML += '</div></div>';
+        
+        calendarContainer.innerHTML = calendarHTML;
+    }
+    
+    renderAppointments(appointments) {
+        const appointmentsList = document.getElementById('appointments-list');
+        
+        if (appointments.length === 0) {
+            appointmentsList.innerHTML = '<p>Nenhum agendamento encontrado.</p>';
+            return;
+        }
+        
+        let appointmentsHTML = '';
+        appointments.forEach(appointment => {
+            const date = new Date(appointment.appointment_date).toLocaleDateString('pt-BR');
+            const status = this.getStatusBadge(appointment.status);
+            
+            appointmentsHTML += `
+                <div class="appointment-card" data-id="${appointment.id}">
+                    <div class="appointment-header">
+                        <h4>${appointment.client_name}</h4>
+                        ${status}
+                    </div>
+                    <div class="appointment-details">
+                        <p><i class="fas fa-calendar"></i> ${date} às ${appointment.appointment_time}</p>
+                        <p><i class="fas fa-spa"></i> ${appointment.service}</p>
+                        <p><i class="fas fa-phone"></i> ${appointment.phone}</p>
+                        ${appointment.notes ? `<p><i class="fas fa-comment"></i> ${appointment.notes}</p>` : ''}
+                    </div>
+                    <div class="appointment-actions">
+                        <button onclick="espacoVivApp.updateAppointmentStatus(${appointment.id}, 'confirmed')" class="btn-confirm">Confirmar</button>
+                        <button onclick="espacoVivApp.updateAppointmentStatus(${appointment.id}, 'cancelled')" class="btn-cancel">Cancelar</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        appointmentsList.innerHTML = appointmentsHTML;
+    }
+    
+    getStatusBadge(status) {
+        const statusMap = {
+            'pending': { text: 'Pendente', class: 'status-pending' },
+            'confirmed': { text: 'Confirmado', class: 'status-confirmed' },
+            'cancelled': { text: 'Cancelado', class: 'status-cancelled' },
+            'completed': { text: 'Concluído', class: 'status-completed' }
+        };
+        
+        const statusInfo = statusMap[status] || { text: 'Desconhecido', class: 'status-unknown' };
+        return `<span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>`;
+    }
+    
+    async updateAppointmentStatus(appointmentId, status) {
+        try {
+            const response = await fetch(`/api/massagista/appointments/${appointmentId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status })
+            });
+            
+            if (response.ok) {
+                this.loadAppointments(); // Reload appointments
+                alert('Status atualizado com sucesso!');
+            } else {
+                throw new Error('Erro ao atualizar status');
+            }
+        } catch (error) {
+            alert('Erro ao atualizar status. Tente novamente.');
+        }
+    }
+    
+    bindDashboardEvents() {
+        // Calendar day click
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.calendar-day')) {
+                const day = e.target.closest('.calendar-day');
+                const date = day.dataset.date;
+                this.showDayAppointments(date);
+            }
+        });
+    }
+    
+    showDayAppointments(date) {
+        // Implementation for showing day appointments
+        console.log('Showing appointments for date:', date);
+    }
+    
+    getMonthName(monthIndex) {
+        const months = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+        return months[monthIndex];
+    }
+}
 
-(function($) {
-    'use strict';
-    
-    // Variáveis globais
-    var EspacoVIV = {
-        isLoading: false,
-        selectedMassagist: null,
-        selectedTime: null,
-        swiper: null
-    };
-    
-    // Inicializar quando documento estiver pronto
-    $(document).ready(function() {
-        EspacoVIV.init();
-    });
-    
-    EspacoVIV.init = function() {
-        // Inicializar componentes
-        this.initSwiper();
-        this.initHeader();
-        this.initForms();
-        this.initMasks();
-        this.initModals();
-        this.initSmoothScroll();
-        
-        // Bind de eventos
-        this.bindEvents();
-        
-        console.log('Espaço VIV website initialized');
-    };
+// Initialize app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.espacoVivApp = new EspacoVivApp();
+});
     
     EspacoVIV.initSwiper = function() {
         // Inicializar Swiper para o slider hero
@@ -473,7 +744,7 @@
                 massagists.forEach(function(m) {
                     html += `
                         <div class="massagist-card" data-id="${m.id}">
-                            <img src="${m.photo || 'assets/images/default-avatar.png'}" alt="${m.name}" class="massagist-photo">
+                            <img src="${m.photo || '../assets/images/default-avatar.png'}" alt="${m.name}" class="massagist-photo">
                             <h4>${m.name}</h4>
                             <p class="massagist-specialties">${m.specialties}</p>
                             <span class="massagist-status online">

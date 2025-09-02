@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espaço VIV - Massagens e Bem-Estar</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Espaço VIV - Massagens terapêuticas, relaxantes e quick massage. Unidades em São Paulo, Rio de Janeiro e Brasília. Agende já!">
+    <meta name="keywords" content="massagem, shiatsu, relaxante, quick massage, são paulo, rio de janeiro, brasília, bem-estar">
+    <meta name="author" content="Espaço VIV">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://espacoviv.com/">
+    <meta property="og:title" content="Espaço VIV - Massagens e Bem-Estar">
+    <meta property="og:description" content="Massagens terapêuticas, relaxantes e quick massage. Agende sua sessão!">
+    <meta property="og:image" content="https://espacoviv.com/assets/images/logo-espaco-viv-rj.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://espacoviv.com/">
+    <meta property="twitter:title" content="Espaço VIV - Massagens e Bem-Estar">
+    <meta property="twitter:description" content="Massagens terapêuticas, relaxantes e quick massage. Agende sua sessão!">
+    <meta property="twitter:image" content="https://espacoviv.com/assets/images/logo-espaco-viv-rj.png">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/icon-16.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Analytics - Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="nav-logo">
+                        <img src="../assets/images/logo-espaco-viv-rj.png" alt="Espaço VIV Logo" width="184" height="73" />
+                    </div>
+                    
+                    <ul class="nav-menu">
+                        <li><a href="#home">Início</a></li>
+                        <li><a href="#massagens">Massagens</a></li>
+                        <li><a href="#unidades">Unidades</a></li>
+                        <li><a href="#promocoes">Promoções</a></li>
+                        <li><a href="#contato">Contato</a></li>
+                        <li>
+                            <button id="loginBtn" class="btn-login">
+                                <i class="fas fa-user"></i> Login Massagista
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- Mobile menu toggle -->
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <div class="container">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Relaxe e Renove suas Energias
+                        <span class="hero-subtitle">no Espaço VIV</span>
+                    </h1>
+                    <p class="hero-description">
+                        Massagens terapêuticas com profissionais qualificadas em São Paulo, Rio de Janeiro e Brasília. 
+                        Seu bem-estar é nossa prioridade.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="openAgendamento()">
+                            <i class="fas fa-calendar-check"></i>
+                            Agendar Agora
+                        </button>
+                        <a href="#massagens" class="btn btn-secondary">
+                            <i class="fas fa-heart"></i>
+                            Ver Tratamentos
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Clientes Satisfeitos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Unidades</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Massagistas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <div class="cta-banner">
+        <div class="container">
+            <div class="cta-content">
+                <i class="fas fa-phone-alt"></i>
+                <span>Ligue já e agende sua massagem:</span>
+                <strong>
+                    SP: (11) 99999-0000 | 
+                    RJ: (21) 99999-0000 | 
+                    BSB: (61) 99999-0000
+                </strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carregue o resto do conteúdo do index.html original aqui -->
+    <!-- (seções de massagens, unidades, etc.) -->
+
+    <!-- Scripts de Produção -->
+    <script>
+        // Configuração para produção
+        window.API_BASE_URL = 'https://espacoviv.railway.app'; // Altere para sua URL
+        
+        // Inicialização do sistema
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Espaço VIV Produção carregado!');
+            
+            // Verificar se API está online
+            fetch(window.API_BASE_URL + '/health')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('✅ API Status:', data.status);
+                })
+                .catch(error => {
+                    console.error('❌ API offline:', error);
+                });
+        });
+    </script>
+    
+    <!-- Load main components -->
+    <script src="../components/UserAuth.js"></script>
+    <script src="../components/BookingModal.js"></script>
+    <script src="../js/main.js"></script>
+
+    <!-- Live Chat (opcional) -->
+    <script>
+        // Integração com WhatsApp Business API ou Zendesk
+        // window.zESettings = {
+        //     webWidget: {
+        //         chat: { connectOnPageLoad: false }
+        //     }
+        // };
+    </script>
+</body>
+</html>

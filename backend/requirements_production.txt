@@ -1,0 +1,23 @@
+# Core dependencies
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.9
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# Data validation & utilities
+pydantic[email]==2.10.3
+python-dotenv==1.0.0
+
+# Production server
+gunicorn==21.2.0
+
+# Database migrations
+alembic==1.13.1
+
+# CORS and additional middleware
+python-multipart==0.0.6
