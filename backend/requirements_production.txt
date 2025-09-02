@@ -18,6 +18,3 @@ gunicorn==21.2.0
 
 # Database migrations
 alembic==1.13.1
-
-# CORS and additional middleware
-python-multipart==0.0.6

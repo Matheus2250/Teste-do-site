@@ -34,14 +34,15 @@ app = FastAPI(
 
 # CORS configuration - mais restritivo em produção
 ALLOWED_ORIGINS = [
-    "https://espacoviv.com",
+    "https://espacoviv.onrender.com",
+    "https://espacoviv.com", 
     "https://www.espacoviv.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000"
 ]
 
 if os.getenv("ENVIRONMENT") == "development":
-    ALLOWED_ORIGINS.append("*")
+    ALLOWED_ORIGINS = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
