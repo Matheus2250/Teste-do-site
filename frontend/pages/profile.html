@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Massagista | Espaço VIV</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://espacoviv.com/wp-content/uploads/2018/09/icon-16.png" type="image/x-icon" />
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            line-height: 1.5;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: #47103C;
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid #5d1a4a;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 50px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 0;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-links a.active {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
+        .profile-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-left: 4px solid #47103C;
+        }
+
+        .profile-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .profile-title h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .profile-title i {
+            color: #47103C;
+            font-size: 2rem;
+        }
+
+        .profile-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .profile-card h2 {
+            color: #47103C;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-card h2 i {
+            font-size: 1.2rem;
+        }
+
+        /* Service Item */
+        .service-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s;
+        }
+
+        .service-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #47103C;
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .service-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .service-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28a745;
+        }
+
+        .status-dot.inactive {
+            background: #dc3545;
+        }
+
+        .service-price {
+            color: #47103C;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .service-duration {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: #47103C;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5d1a4a;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #bd2130;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Add Service Form */
+        .add-service-form {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .add-service-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #47103C;
+            box-shadow: 0 0 0 2px rgba(71, 16, 60, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Personal Info */
+        .info-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #47103C;
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .edit-info-btn {
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .profile-header {
+                padding: 20px;
+            }
+
+            .profile-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .service-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .service-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-title {
+            color: #47103C;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+                    <img src="https://espacoviv.com/wp-content/uploads/2019/06/logo-espaco-viv-rj.png" alt="Espaço VIV">
+                    <h1>Perfil</h1>
+                </a>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="dashboard.html">
+                    <i class="fas fa-calendar-alt"></i> Meus Agendamentos
+                </a>
+                <a href="profile.html" class="active">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="index.html" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="profile-main">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-title">
+                <i class="fas fa-user-circle"></i>
+                <div>
+                    <h1>Meu Perfil</h1>
+                    <p class="profile-subtitle">Gerencie suas informações pessoais e serviços oferecidos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="profile-content">
+            <!-- Personal Information -->
+            <div class="profile-card">
+                <h2>
+                    <i class="fas fa-user"></i>
+                    Informações Pessoais
+                </h2>
+                
+                <div class="info-item">
+                    <div class="info-label">Nome Completo</div>
+                    <div class="info-value" id="userName">Matheus Vitorino Ribeiro</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value" id="userEmail">ana@espacoviv.com</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Unidade de Trabalho</div>
+                    <div class="info-value" id="userUnit">São Paulo - Perdizes</div>
+                </div>
+                
+                <button class="btn btn-primary edit-info-btn" onclick="editPersonalInfo()">
+                    <i class="fas fa-edit"></i> Editar Informações
+                </button>
+            </div>
+
+            <!-- Services & Pricing -->
+            <div class="profile-card">
+                <h2>
+                    <i class="fas fa-hands"></i>
+                    Serviços & Preços
+                </h2>
+                
+                <div id="servicesList">
+                    <!-- Services will be rendered here by JavaScript -->
+                </div>
+
+                <button class="btn btn-primary" onclick="showAddServiceForm()" style="margin-top: 20px;">
+                    <i class="fas fa-plus"></i> Adicionar Serviço
+                </button>
+
+                <!-- Add Service Form -->
+                <div class="add-service-form" id="addServiceForm">
+                    <h3 style="margin-bottom: 20px; color: #47103C;">
+                        <i class="fas fa-plus-circle"></i> Adicionar Serviço
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Serviço</label>
+                        <select class="form-input" id="newServiceType">
+                            <option value="">Selecione um serviço</option>
+                            <option value="shiatsu">Shiatsu</option>
+                            <option value="quick">Quick Massage</option>
+                            <option value="relaxante">Massagem Relaxante</option>
+                            <option value="ventosaterapia">Ventosaterapia</option>
+                            <option value="drenagem">Drenagem Linfática</option>
+                            <option value="redutora">Massagem Redutora</option>
+                            <option value="pedras">Terapia das Pedras Quentes</option>
+                            <option value="velas">Massagem com Velas Quentes</option>
+                            <option value="esfoliacao">Massagem Relaxante com Esfoliação</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Preço (R$)</label>
+                        <input type="number" class="form-input" id="newServicePrice" placeholder="Digite o preço que você cobra" min="1" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="addService()">
+                            <i class="fas fa-save"></i> Adicionar aos Meus Serviços
+                        </button>
+                        <button class="btn btn-secondary" onclick="hideAddServiceForm()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Service Modal -->
+    <div id="editServiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Serviço</h3>
+                <button class="close-modal" onclick="closeEditModal()">&times;</button>
+            </div>
+            
+            <div class="success-message" id="editSuccessMessage">
+                <i class="fas fa-check-circle"></i> Serviço atualizado com sucesso!
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Tipo de Serviço</label>
+                <input type="text" class="form-input" id="editServiceName" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Preço (R$)</label>
+                <input type="number" class="form-input" id="editServicePrice" min="0" step="0.01">
+            </div>
+            
+            <div class="form-actions">
+                <button class="btn btn-primary" onclick="saveServiceEdit()">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+                <button class="btn btn-secondary" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Personal Info Modal -->
+    <div id="editPersonalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Informações Pessoais</h3>
+                <button class="close-modal" onclick="closePersonalModal()">&times;</button>
+            </div>
+            
+            <div class="success-message" id="personalSuccessMessage">
+                <i class="fas fa-check-circle"></i> Informações atualizadas com sucesso!
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Nome Completo</label>
+                <input type="text" class="form-input" id="editUserName">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="editUserEmail">
+            </div>
+            
+            <div class="form-actions">
+                <button class="btn btn-primary" onclick="savePersonalInfo()">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+                <button class="btn btn-secondary" onclick="closePersonalModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (required for dashboard.js) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Load user management script -->
+    <script src="../js/dashboard.js"></script>
+    
+    <script>
+        // Available service types (matching massagens.html)
+        const availableServices = {
+            'shiatsu': { name: 'Shiatsu', duration: 60 },
+            'quick': { name: 'Quick Massage', duration: 15 },
+            'relaxante': { name: 'Massagem Relaxante', duration: 60 },
+            'ventosaterapia': { name: 'Ventosaterapia', duration: 60 },
+            'drenagem': { name: 'Drenagem Linfática', duration: 60 },
+            'redutora': { name: 'Massagem Redutora', duration: 60 },
+            'pedras': { name: 'Terapia das Pedras Quentes', duration: 90 },
+            'velas': { name: 'Massagem com Velas Quentes', duration: 60 },
+            'esfoliacao': { name: 'Massagem Relaxante com Esfoliação', duration: 90 }
+        };
+
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:10000' 
+            : 'https://espacoviv-backend.onrender.com';
+
+        // Get auth token from localStorage
+        function getAuthToken() {
+            return localStorage.getItem('espacoviv_token') || localStorage.getItem('userToken');
+        }
+
+        // Make authenticated API request
+        async function apiRequest(endpoint, options = {}) {
+            const token = getAuthToken();
+            if (!token) {
+                throw new Error('Nenhum token de autenticação encontrado');
+            }
+
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...defaultOptions,
+                ...options,
+                headers: { ...defaultOptions.headers, ...(options.headers || {}) }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    // Token expired or invalid, redirect to login
+                    localStorage.removeItem('espacoviv_token');
+                    localStorage.removeItem('userToken');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                throw new Error(`API Error: ${response.statusText}`);
+            }
+
+            return response.json();
+        }
+
+        // Get current user data from API
+        async function getCurrentUser() {
+            try {
+                const userData = await apiRequest('/api/auth/me');
+                return userData;
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                
+                // Try to get from user session as fallback
+                if (window.Dashboard && window.Dashboard.currentUser) {
+                    return window.Dashboard.currentUser;
+                }
+                
+                // If no token, redirect to login
+                if (!getAuthToken()) {
+                    window.location.href = 'index.html';
+                    return null;
+                }
+                
+                return null;
+            }
+        }
+
+        // User's services based on their massage_types
+        let services = [];
+        let currentEditingService = null;
+        let nextServiceId = 1;
+
+        // Initialize user services from massage_types
+        async function initUserServices() {
+            const currentUser = await getCurrentUser();
+            let massageTypes = 'Shiatsu, Relaxante, Terapeutica'; // Default
+            
+            if (currentUser && currentUser.massage_types) {
+                massageTypes = currentUser.massage_types;
+            } else if (currentUser && currentUser.specialties) {
+                // Use specialties if massage_types is not available
+                massageTypes = currentUser.specialties.join(', ');
+            }
+            
+            if (massageTypes) {
+                const userTypes = massageTypes.toLowerCase().split(', ');
+                services = [];
+                
+                userTypes.forEach(type => {
+                    const cleanType = type.trim().replace('ê', 'e'); // terapeutica
+                    if (availableServices[cleanType]) {
+                        // Get user's custom price if available
+                        let price = availableServices[cleanType].price;
+                        if (currentUser && currentUser.specialty_prices) {
+                            const customPrice = currentUser.specialty_prices.find(p => p.specialty.toLowerCase() === cleanType);
+                            if (customPrice) {
+                                price = customPrice.price;
+                            }
+                        }
+                        
+                        services.push({
+                            id: nextServiceId++,
+                            type: cleanType,
+                            name: availableServices[cleanType].name,
+                            price: price,
+                            duration: availableServices[cleanType].duration,
+                            active: true
+                        });
+                    }
+                });
+            }
+        }
+
+        // Add Service Functions
+        function showAddServiceForm() {
+            // Show only services not already added
+            const serviceSelect = document.getElementById('newServiceType');
+            const options = serviceSelect.querySelectorAll('option:not(:first-child)');
+            
+            options.forEach(option => {
+                const serviceType = option.value;
+                const alreadyHas = services.some(s => s.type === serviceType);
+                option.style.display = alreadyHas ? 'none' : 'block';
+            });
+            
+            document.getElementById('addServiceForm').classList.add('active');
+        }
+
+        function hideAddServiceForm() {
+            document.getElementById('addServiceForm').classList.remove('active');
+            // Clear form
+            document.getElementById('newServiceType').value = '';
+            document.getElementById('newServicePrice').value = '';
+        }
+
+        function addService() {
+            const serviceType = document.getElementById('newServiceType').value;
+            const servicePrice = parseFloat(document.getElementById('newServicePrice').value);
+            
+            if (!serviceType) {
+                alert('Por favor, selecione um tipo de serviço.');
+                return;
+            }
+
+            if (!servicePrice || servicePrice <= 0) {
+                alert('Por favor, digite um preço válido.');
+                return;
+            }
+
+            // Check if already exists
+            if (services.some(s => s.type === serviceType)) {
+                alert('Você já possui este serviço.');
+                return;
+            }
+
+            const serviceData = availableServices[serviceType];
+            const newService = {
+                id: nextServiceId++,
+                type: serviceType,
+                name: serviceData.name,
+                price: servicePrice,
+                duration: serviceData.duration,
+                active: true
+            };
+
+            services.push(newService);
+            renderServices();
+            hideAddServiceForm();
+            
+            // Update user massage_types
+            updateUserMassageTypes();
+            
+            // Show success message
+            alert('Serviço adicionado com sucesso!');
+        }
+
+        // Edit Service Functions
+        function editService(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (!service) return;
+
+            currentEditingService = serviceId;
+            
+            document.getElementById('editServiceName').value = service.name;
+            document.getElementById('editServicePrice').value = service.price;
+            
+            document.getElementById('editServiceModal').style.display = 'block';
+        }
+
+        function saveServiceEdit() {
+            if (!currentEditingService) return;
+
+            const price = parseFloat(document.getElementById('editServicePrice').value);
+
+            if (!price || price <= 0) {
+                alert('Por favor, insira um preço válido.');
+                return;
+            }
+
+            const service = services.find(s => s.id === currentEditingService);
+            if (service) {
+                service.price = price;
+                
+                renderServices();
+                
+                // Show success message
+                const successMsg = document.getElementById('editSuccessMessage');
+                successMsg.classList.add('show');
+                
+                setTimeout(() => {
+                    successMsg.classList.remove('show');
+                    closeEditModal();
+                }, 2000);
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editServiceModal').style.display = 'none';
+            currentEditingService = null;
+        }
+
+        // Toggle Service Status  
+        function toggleService(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (service) {
+                service.active = !service.active;
+                renderServices();
+                updateUserMassageTypes();
+                
+                const status = service.active ? 'ativado' : 'pausado';
+                alert(`Serviço ${status} com sucesso!`);
+            }
+        }
+
+        // Remove Service
+        function removeService(serviceId) {
+            if (confirm('Tem certeza que deseja remover este serviço?')) {
+                services = services.filter(s => s.id !== serviceId);
+                renderServices();
+                updateUserMassageTypes();
+                alert('Serviço removido com sucesso!');
+            }
+        }
+
+        // Update user massage types based on current services
+        function updateUserMassageTypes() {
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                const activeTypes = services
+                    .filter(s => s.active)
+                    .map(s => s.name)
+                    .join(', ');
+                
+                currentUser.massage_types = activeTypes;
+                console.log('Updated massage types:', activeTypes);
+                
+                // Update user session if available
+                if (window.Dashboard && window.Dashboard.currentUser) {
+                    window.Dashboard.currentUser.massage_types = activeTypes;
+                }
+            }
+        }
+
+        // Personal Info Functions
+        function editPersonalInfo() {
+            document.getElementById('editUserName').value = document.getElementById('userName').textContent;
+            document.getElementById('editUserEmail').value = document.getElementById('userEmail').textContent;
+            
+            document.getElementById('editPersonalModal').style.display = 'block';
+        }
+
+        function savePersonalInfo() {
+            const name = document.getElementById('editUserName').value.trim();
+            const email = document.getElementById('editUserEmail').value.trim();
+
+            if (!name || !email) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Por favor, insira um email válido.');
+                return;
+            }
+
+            document.getElementById('userName').textContent = name;
+            document.getElementById('userEmail').textContent = email;
+            
+            // Update currentUser object
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                currentUser.name = name;
+                currentUser.email = email;
+                
+                // Update user session if available
+                if (window.Dashboard && window.Dashboard.currentUser) {
+                    window.Dashboard.currentUser.name = name;
+                    window.Dashboard.currentUser.email = email;
+                }
+            }
+
+            // Show success message
+            const successMsg = document.getElementById('personalSuccessMessage');
+            successMsg.classList.add('show');
+            
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+                closePersonalModal();
+            }, 2000);
+        }
+
+        function closePersonalModal() {
+            document.getElementById('editPersonalModal').style.display = 'none';
+        }
+
+        // Render Services
+        function renderServices() {
+            const servicesList = document.getElementById('servicesList');
+            servicesList.innerHTML = '';
+
+            if (services.length === 0) {
+                servicesList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Nenhum serviço adicionado ainda. Clique em "Adicionar Serviço" para começar.</p>';
+                return;
+            }
+
+            services.forEach(service => {
+                const serviceDiv = document.createElement('div');
+                serviceDiv.className = 'service-item';
+                serviceDiv.setAttribute('data-service-id', service.id);
+                
+                serviceDiv.innerHTML = `
+                    <div class="service-header">
+                        <div class="service-name">${service.name}</div>
+                        <div class="service-status">
+                            <div class="status-dot${service.active ? '' : ' inactive'}"></div>
+                            <span>${service.active ? 'Ativo' : 'Inativo'}</span>
+                        </div>
+                    </div>
+                    <div class="service-price">R$ ${service.price.toFixed(2).replace('.', ',')}</div>
+                    <div class="service-actions">
+                        <button class="btn btn-sm btn-primary" onclick="editService(${service.id})">
+                            <i class="fas fa-edit"></i> Editar Preço
+                        </button>
+                        <button class="btn btn-sm ${service.active ? 'btn-secondary' : 'btn-success'}" onclick="toggleService(${service.id})">
+                            <i class="fas fa-${service.active ? 'pause' : 'play'}"></i> ${service.active ? 'Pausar' : 'Ativar'}
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="removeService(${service.id})">
+                            <i class="fas fa-trash"></i> Remover
+                        </button>
+                    </div>
+                `;
+                
+                servicesList.appendChild(serviceDiv);
+            });
+        }
+
+        // Load user data
+        async function loadUserData() {
+            const currentUser = await getCurrentUser();
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name || 'Nome não disponível';
+                document.getElementById('userEmail').textContent = currentUser.email || 'Email não disponível';
+                
+                // Get unit name from unit_preference
+                let unitName = 'Unidade não definida';
+                if (currentUser.unit_preference) {
+                    unitName = getUnitName(currentUser.unit_preference);
+                } else if (currentUser.unit) {
+                    unitName = getUnitName(currentUser.unit);
+                }
+                document.getElementById('userUnit').textContent = unitName;
+            } else {
+                console.warn('No user data available');
+                // If no user data and no token, will redirect to login in getCurrentUser()
+            }
+        }
+
+        // Get unit name
+        function getUnitName(unitCode) {
+            const units = {
+                // São Paulo
+                'sp': 'São Paulo - Perdizes',
+                'sp-ingleses': 'São Paulo - Ingleses [Matriz]',
+                'sp-perdizes': 'São Paulo - Perdizes', 
+                'sp-vila-clementino': 'São Paulo - Vila Clementino',
+                'sp-prudente': 'São Paulo - Prudente de Moraes',
+                
+                // Rio de Janeiro
+                'rj': 'Rio de Janeiro - Centro',
+                'rj-centro': 'Rio de Janeiro - Centro',
+                'rj-copacabana': 'Rio de Janeiro - Copacabana',
+                
+                // Brasília
+                'bsb': 'Brasília - SHS',
+                'bsb-sudoeste': 'Brasília - Sudoeste',
+                'bsb-asa-sul': 'Brasília - Asa Sul (Galeria Hotel Nacional)'
+            };
+            return units[unitCode] || `${unitCode} (unidade não encontrada)`;
+        }
+
+        // Modal close on outside click
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editServiceModal');
+            const personalModal = document.getElementById('editPersonalModal');
+            
+            if (event.target === editModal) {
+                closeEditModal();
+            }
+            if (event.target === personalModal) {
+                closePersonalModal();
+            }
+        }
+
+        // Logout function
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Tem certeza que deseja sair?')) {
+                // Clear any stored user data
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                
+                // Redirect to home page
+                window.location.href = 'index.html';
+            }
+        });
+
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Check if user is authenticated
+                if (!getAuthToken()) {
+                    console.log('No auth token found, redirecting to login');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // Load user data and services
+                await loadUserData();
+                await initUserServices();
+                renderServices();
+                
+                console.log('Profile page initialized successfully');
+            } catch (error) {
+                console.error('Error initializing profile page:', error);
+                // If there's an authentication error, redirect to login
+                if (error.message.includes('token') || error.message.includes('401')) {
+                    window.location.href = 'index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header, Depends, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
@@ -6,6 +6,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime, date, timedelta
 import hashlib
 import jwt
+from jwt.exceptions import DecodeError, ExpiredSignatureError
 import os
 import secrets
 import smtplib
@@ -37,6 +38,10 @@ ALGORITHM = "HS256"
 # MODELOS
 # ============================================================================
 
+class SpecialtyPrice(BaseModel):
+    specialty: str
+    price: float
+
 class UserRegister(BaseModel):
     name: str
     email: EmailStr
@@ -45,6 +50,7 @@ class UserRegister(BaseModel):
     phone: Optional[str] = None
     unit_preference: Optional[str] = None
     specialties: List[str] = []
+    specialty_prices: List[SpecialtyPrice] = []
     birth_date: Optional[str] = None
     gender: Optional[str] = None
     experience_years: Optional[int] = None
@@ -74,10 +80,21 @@ class ChangePasswordRequest(BaseModel):
     current_password: str
     new_password: str
 
+class AvailabilityRequest(BaseModel):
+    date: str
+    status: str  # 'available' or 'unavailable'
+    time_slots: List[str] = []
+
+class WeekAvailabilityRequest(BaseModel):
+    dates: List[str]
+    status: str
+    time_slots: List[str] = []
+
 class ProfileUpdateRequest(BaseModel):
     name: Optional[str] = None
     phone: Optional[str] = None
     specialties: Optional[List[str]] = None
+    specialty_prices: Optional[List[SpecialtyPrice]] = None
     unit_preference: Optional[str] = None
     experience_years: Optional[int] = None
 
@@ -109,31 +126,28 @@ class AdvancedDayView(BaseModel):
 # BANCO EM MEMÓRIA (TEMPORÁRIO)
 # ============================================================================
 
-users_db = [
-    {
-        "id": 1, "name": "Ana Silva", "email": "ana@espacoviv.com", 
-        "password": hashlib.sha256("123456".encode()).hexdigest(),
-        "cpf": "111.111.111-11", "phone": "(11) 99999-1111",
-        "unit_preference": "sp-perdizes", "specialties": ["Shiatsu", "Relaxante"],
-        "is_available": True, "user_type": "massagista"
-    },
-    {
-        "id": 2, "name": "Maria Santos", "email": "maria@espacoviv.com",
-        "password": hashlib.sha256("123456".encode()).hexdigest(),
-        "cpf": "222.222.222-22", "phone": "(11) 99999-2222",
-        "unit_preference": "rj-centro", "specialties": ["Quick", "Terapêutica"],
-        "is_available": True, "user_type": "massagista"
-    }
-]
+users_db = []
 
 units_db = [
-    {"id": 1, "code": "sp-perdizes", "name": "São Paulo - Perdizes", "address": "Rua da Consolação, 123"},
-    {"id": 2, "code": "sp-vila-clementino", "name": "São Paulo - Vila Clementino", "address": "Av. Domingos de Morais, 456"},
-    {"id": 3, "code": "rj-centro", "name": "Rio de Janeiro - Centro", "address": "Av. Rio Branco, 200"},
-    {"id": 4, "code": "bsb-sudoeste", "name": "Brasília - Sudoeste", "address": "SHS Quadra 6"}
+    # São Paulo (4 unidades)
+    {"id": 1, "code": "sp-ingleses", "name": "São Paulo - Ingleses [Matriz]", "address": "Bela Vista", "hours": "6h-22h"},
+    {"id": 2, "code": "sp-perdizes", "name": "São Paulo - Perdizes", "address": "R. Tavares Bastos, 564", "hours": "24h"},
+    {"id": 3, "code": "sp-vila-clementino", "name": "São Paulo - Vila Clementino", "address": "R. Dr. Bacelar, 82", "hours": "24h"},
+    {"id": 4, "code": "sp-prudente", "name": "São Paulo - Prudente de Moraes", "address": "R. Prudente de Moraes Neto, 81", "hours": "24h"},
+    
+    # Rio de Janeiro (2 unidades)
+    {"id": 5, "code": "rj-centro", "name": "Rio de Janeiro - Centro", "address": "Av. Rio Branco, 185 - Sala 2103", "hours": "6h-22h"},
+    {"id": 6, "code": "rj-copacabana", "name": "Rio de Janeiro - Copacabana", "address": "R. Barata Ribeiro, 391", "hours": "6h-22h"},
+    
+    # Brasília (2 unidades)
+    {"id": 7, "code": "bsb-sudoeste", "name": "Brasília - Sudoeste", "address": "CCSW 01 Lote 04", "hours": "24h"},
+    {"id": 8, "code": "bsb-asa-sul", "name": "Brasília - Asa Sul", "address": "SHS Quadra 1 Bloco A - Galeria Hotel Nacional", "hours": "24h"}
 ]
 
 bookings_db = []
+
+# Availability database - structure: {user_id: {date: {status, time_slots}}}
+availability_db = {}
 
 services_db = [
     {"id": 1, "name": "Shiatsu", "duration": 60, "price": 120.0},
@@ -158,6 +172,27 @@ def create_access_token(user_id: int) -> str:
         "exp": datetime.utcnow() + timedelta(hours=24)
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+def verify_access_token(token: str) -> Dict:
+    """Verify JWT token and return user data"""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = payload.get("user_id")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Token inválido")
+        
+        # Find user in database
+        user = next((u for u in users_db if u["id"] == user_id), None)
+        if user is None:
+            raise HTTPException(status_code=401, detail="Usuário não encontrado")
+        
+        return user
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expirado")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Erro na validação do token: {str(e)}")
 
 def get_next_id(table: List) -> int:
     return max([item["id"] for item in table], default=0) + 1
@@ -304,6 +339,9 @@ async def health_check():
 # AUTH
 @app.post("/api/auth/register")
 async def register(user_data: UserRegister):
+    print(f"Dados recebidos para registro: {user_data}")
+    print(f"Especialidades: {user_data.specialties}")
+    print(f"Precos especialidades: {user_data.specialty_prices}")
     errors = []
     
     # Check if user already exists
@@ -329,6 +367,20 @@ async def register(user_data: UserRegister):
     # Validate phone format
     if user_data.phone and not user_data.phone.replace("(", "").replace(")", "").replace("-", "").replace(" ", "").isdigit():
         errors.append("Formato de telefone inválido")
+    
+    # Validate specialty prices
+    if user_data.specialty_prices:
+        specialty_names = [sp.specialty for sp in user_data.specialty_prices]
+        if len(set(specialty_names)) != len(specialty_names):
+            errors.append("Não é possível definir o mesmo preço duas vezes para a mesma especialidade")
+        
+        for sp in user_data.specialty_prices:
+            if sp.price <= 0:
+                errors.append(f"Preço para {sp.specialty} deve ser maior que zero")
+            if sp.price > 5000:
+                errors.append(f"Preço para {sp.specialty} não pode exceder R$ 5.000")
+            if sp.specialty not in user_data.specialties:
+                errors.append(f"Preço definido para especialidade não selecionada: {sp.specialty}")
     
     # If there are validation errors, return them
     if errors:
@@ -357,6 +409,7 @@ async def register(user_data: UserRegister):
         "phone": user_data.phone,
         "unit_preference": user_data.unit_preference,
         "specialties": user_data.specialties,
+        "specialty_prices": [sp.dict() for sp in user_data.specialty_prices],
         "birth_date": user_data.birth_date,
         "gender": user_data.gender,
         "experience_years": user_data.experience_years,
@@ -366,6 +419,9 @@ async def register(user_data: UserRegister):
     }
     
     users_db.append(new_user)
+    print(f"Usuario salvo no banco: {new_user}")
+    print(f"Especialidades salvas: {new_user.get('specialties', [])}")
+    print(f"Precos salvos: {new_user.get('specialty_prices', [])}")
     return {"message": "Usuário cadastrado com sucesso", "user_id": new_user["id"]}
 
 @app.post("/api/auth/login")
@@ -384,8 +440,35 @@ async def login(login_data: UserLogin):
             "id": user["id"],
             "name": user["name"],
             "email": user["email"],
-            "unit_preference": user["unit_preference"]
+            "unit_preference": user["unit_preference"],
+            "specialties": user.get("specialties", []),
+            "specialty_prices": user.get("specialty_prices", [])
         }
+    }
+
+@app.get("/api/auth/me")
+async def get_current_user(authorization: str = Header(None)):
+    """Get current user information from JWT token"""
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Token de autorização não fornecido")
+    
+    # Extract token from Authorization header (format: "Bearer <token>")
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Formato de token inválido")
+    
+    token = authorization.split(" ")[1]
+    user = verify_access_token(token)
+    
+    return {
+        "id": user["id"],
+        "name": user["name"],
+        "email": user["email"],
+        "unit_preference": user["unit_preference"],
+        "specialties": user.get("specialties", []),
+        "specialty_prices": user.get("specialty_prices", []),
+        "massage_types": ", ".join(user.get("specialties", [])),
+        "phone": user.get("phone", ""),
+        "is_online": True
     }
 
 # UNITS
@@ -396,15 +479,23 @@ async def get_units():
 # MASSAGISTAS
 @app.get("/api/massagista/by-unit/{unit_code}")
 async def get_massagistas_by_unit(unit_code: str):
+    print(f"Buscando massagistas para unidade: {unit_code}")
+    print(f"Total usuários no banco: {len(users_db)}")
+    
     unit = next((u for u in units_db if u["code"] == unit_code), None)
     if not unit:
         raise HTTPException(status_code=404, detail="Unidade não encontrada")
+    
+    # Debug users
+    for u in users_db:
+        print(f"User: {u['name']}, type: {u.get('user_type')}, unit: {u.get('unit_preference')}, available: {u.get('is_available')}")
     
     massagistas = [
         {
             "id": u["id"],
             "name": u["name"],
             "specialties": u.get("specialties", []),
+            "specialty_prices": u.get("specialty_prices", []),
             "is_available": u.get("is_available", True),
             "avatar_url": "/static/assets/images/default-avatar.png"
         }
@@ -414,6 +505,7 @@ async def get_massagistas_by_unit(unit_code: str):
         and u.get("is_available", True)
     ]
     
+    print(f"Massagistas encontradas: {len(massagistas)}")
     return massagistas
 
 # BOOKINGS
@@ -616,6 +708,238 @@ async def find_next_available_slot(unit_code: str, from_date: Optional[str] = No
 @app.get("/api/services")
 async def get_services():
     return services_db
+
+# NOVOS ENDPOINTS FUNCIONAIS
+@app.post("/api/test/availability/day/{date}")
+async def test_day_availability(date: str, request: Request):
+    try:
+        body = await request.body()
+        import json
+        data = json.loads(body)
+        
+        status = data.get("status", "")
+        time_slots = data.get("time_slots", [])
+        
+        print(f"SUCESSO Day {date}: status={status}, slots={len(time_slots)}")
+        
+        user_id = 1
+        if user_id not in availability_db:
+            availability_db[user_id] = {}
+        
+        availability_db[user_id][date] = {
+            "status": status,
+            "time_slots": time_slots
+        }
+        
+        return {"message": "OK"}
+    except Exception as e:
+        print(f"ERRO Day: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/test/availability/week")
+async def test_week_availability(request: Request):
+    try:
+        body = await request.body()
+        import json
+        data = json.loads(body)
+        
+        dates = data.get("dates", [])
+        status = data.get("status", "")
+        time_slots = data.get("time_slots", [])
+        
+        print(f"SUCESSO Week: {len(dates)} dates, status={status}, slots={len(time_slots)}")
+        
+        user_id = 1
+        if user_id not in availability_db:
+            availability_db[user_id] = {}
+        
+        for date_str in dates:
+            availability_db[user_id][date_str] = {
+                "status": status,
+                "time_slots": time_slots
+            }
+        
+        return {"message": "OK"}
+    except Exception as e:
+        print(f"ERRO Week: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/calendar/day/{date}")
+async def get_saved_day_availability(date: str):
+    try:
+        user_id = 1
+        if user_id not in availability_db or date not in availability_db[user_id]:
+            print(f"GET Day {date}: VAZIO")
+            return {"status": "available", "time_slots": []}
+        
+        data = availability_db[user_id][date]
+        print(f"GET Day {date}: {data}")
+        return data
+    except Exception as e:
+        print(f"ERRO GET Day: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/massagista/appointments/today")
+async def get_today_appointments():
+    try:
+        user_id = 1
+        today = datetime.now().strftime("%Y-%m-%d")
+        
+        today_bookings = [
+            b for b in bookings_db 
+            if b.get("massagista_id") == user_id and b.get("appointment_date") == today
+        ]
+        
+        print(f"Agendamentos hoje para user {user_id}: {len(today_bookings)}")
+        return today_bookings
+    except Exception as e:
+        print(f"ERRO Today Appointments: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# AVAILABILITY/CALENDAR APIs
+@app.put("/api/massagista/availability/{date}")
+async def set_day_availability(date: str, request: Request):
+    """Set availability for a specific day"""
+    try:
+        # Lê o body da requisição diretamente
+        body = await request.body()
+        print(f"Raw body recebido para dia {date}: {body}")
+        
+        # Parse manual do JSON
+        import json
+        data = json.loads(body)
+        print(f"Dados parseados para dia {date}: {data}")
+        
+        status = data.get("status", "")
+        time_slots = data.get("time_slots", [])
+        
+        print(f"Date: {date}")
+        print(f"Status: {status}")
+        print(f"Time slots: {time_slots}")
+        
+        # Temporariamente usando user_id fixo para teste
+        user_id = 1
+        
+        if user_id not in availability_db:
+            availability_db[user_id] = {}
+        
+        availability_db[user_id][date] = {
+            "status": status,
+            "time_slots": time_slots
+        }
+        
+        print(f"Sucesso! Dados salvos para dia {date} user {user_id}")
+        return {"message": f"Disponibilidade para {date} atualizada com sucesso"}
+        
+    except Exception as e:
+        print(f"Erro: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/massagista/availability/{date}")
+async def get_day_availability(date: str, authorization: str = Header(None)):
+    """Get availability for a specific day"""
+    user = verify_access_token(authorization.split(" ")[1] if authorization else "")
+    user_id = user["id"]
+    
+    if user_id not in availability_db or date not in availability_db[user_id]:
+        return {"status": "unavailable", "time_slots": []}
+    
+    return availability_db[user_id][date]
+
+@app.put("/api/test/week-data")
+async def test_week_data(request: WeekAvailabilityRequest):
+    """Endpoint para testar validação dos dados"""
+    print(f"✅ Dados recebidos com sucesso!")
+    print(f"Dates: {request.dates}")
+    print(f"Status: {request.status}")
+    print(f"Time slots: {request.time_slots}")
+    return {"message": "Dados validados com sucesso", "data": request}
+
+@app.put("/api/massagista/availability/week")
+async def set_week_availability(request: Request):
+    """Set availability for entire week"""
+    try:
+        # Lê o body da requisição diretamente
+        body = await request.body()
+        print(f"Raw body recebido: {body}")
+        
+        # Parse manual do JSON
+        import json
+        data = json.loads(body)
+        print(f"Dados parseados: {data}")
+        
+        dates = data.get("dates", [])
+        status = data.get("status", "")
+        time_slots = data.get("time_slots", [])
+        
+        print(f"Dates: {dates}")
+        print(f"Status: {status}")
+        print(f"Time slots: {time_slots}")
+        
+        # Temporariamente usando user_id fixo para teste
+        user_id = 1
+        
+        if user_id not in availability_db:
+            availability_db[user_id] = {}
+        
+        # Set availability for all provided dates
+        for date_str in dates:
+            availability_db[user_id][date_str] = {
+                "status": status,
+                "time_slots": time_slots
+            }
+        
+        print(f"Sucesso! Dados salvos para user {user_id}")
+        return {"message": f"Semana marcada como {status}"}
+        
+    except Exception as e:
+        print(f"Erro: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/massagista/availability/month/{year}/{month}")
+async def get_month_availability(year: int, month: int, authorization: str = Header(None)):
+    """Get availability for entire month"""
+    user = verify_access_token(authorization.split(" ")[1] if authorization else "")
+    user_id = user["id"]
+    
+    if user_id not in availability_db:
+        return {}
+    
+    # Filter availability for the requested month
+    month_availability = {}
+    month_str = f"{year}-{month:02d}"
+    
+    for date_str, availability in availability_db[user_id].items():
+        if date_str.startswith(month_str):
+            month_availability[date_str] = availability
+    
+    return month_availability
+
+# PUBLIC APIs for calendar consultation (no auth needed)
+@app.get("/api/massagista/{massagista_id}/availability/month/{year}/{month}")
+async def get_massagista_month_availability(massagista_id: int, year: int, month: int):
+    """Get public availability for a specific massagista for entire month"""
+    if massagista_id not in availability_db:
+        return {}
+    
+    # Filter availability for the requested month
+    month_availability = {}
+    month_str = f"{year}-{month:02d}"
+    
+    for date_str, availability in availability_db[massagista_id].items():
+        if date_str.startswith(month_str):
+            month_availability[date_str] = availability
+    
+    return month_availability
+
+@app.get("/api/massagista/{massagista_id}/availability/day/{date}")
+async def get_massagista_day_availability(massagista_id: int, date: str):
+    """Get public availability for a specific massagista for a specific day"""
+    if massagista_id not in availability_db:
+        return {"status": "unavailable", "time_slots": []}
+    
+    day_availability = availability_db[massagista_id].get(date, {"status": "unavailable", "time_slots": []})
+    return day_availability
 
 if __name__ == "__main__":
     import uvicorn

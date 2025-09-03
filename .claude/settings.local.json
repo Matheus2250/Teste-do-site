@@ -12,7 +12,15 @@
       "Bash(pip install:*)",
       "Bash(curl:*)",
       "Bash(start dashboard-novo.html)",
-      "Bash(start index.html)"
+      "Bash(start index.html)",
+      "Bash(del:*)",
+      "Bash(rm:*)",
+      "Bash(mklink:*)",
+      "Bash(start profile.html)",
+      "Bash(start frontend/pages/profile.html)",
+      "Bash(start frontend/pages/index.html)",
+      "Bash(start test_login.html)",
+      "Bash(start full_test.html)"
     ],
     "deny": [],
     "ask": []

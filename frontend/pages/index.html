@@ -435,7 +435,7 @@
             color: white;
         }
         
-        .massagista-card img {
+        .massagista-card img, .avatar-placeholder {
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -444,7 +444,17 @@
             border: 3px solid #f0f0f0;
         }
         
-        .massagista-card.selected img {
+        .avatar-placeholder {
+            background: #47103C;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .massagista-card.selected img, .massagista-card.selected .avatar-placeholder {
             border-color: white;
         }
         
@@ -661,15 +671,39 @@
         
         .checkbox-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
             margin-top: 8px;
+        }
+        
+        .specialty-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
         }
         
         .checkbox-label {
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 500;
+        }
+        
+        .price-input {
+            padding: 8px;
+            border: 2px solid #47103C;
+            border-radius: 5px;
+            font-size: 14px;
+            background: #f9f9f9;
+        }
+        
+        .price-input:focus {
+            outline: none;
+            background: white;
+            border-color: #65217A;
             font-weight: normal;
             margin-bottom: 5px;
             cursor: pointer;
@@ -990,7 +1024,10 @@
                     </div>
                     <div class="user-dropdown">
                         <a href="dashboard.html" class="dropdown-item">
-                            <i class="fas fa-tachometer-alt"></i> Área do Profissional
+                            <i class="fas fa-calendar-alt"></i> Meus Agendamentos
+                        </a>
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user-cog"></i> Meu Perfil
                         </a>
                         <a href="#" id="logoutBtn" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i> Sair
@@ -1279,33 +1316,80 @@
                         <label>Unidade de Trabalho:</label>
                         <select id="registerUnit" required>
                             <option value="">Selecione uma unidade</option>
-                            <option value="sp">São Paulo - Perdizes</option>
-                            <option value="rj">Rio de Janeiro - Centro</option>
-                            <option value="bsb">Brasília - SHS</option>
+                            <optgroup label="São Paulo (4 unidades)">
+                                <option value="sp-ingleses">São Paulo - Ingleses [Matriz] - Bela Vista</option>
+                                <option value="sp-perdizes">São Paulo - Perdizes - 24h</option>
+                                <option value="sp-vila-clementino">São Paulo - Vila Clementino - 24h</option>
+                                <option value="sp-prudente">São Paulo - Prudente de Moraes - 24h</option>
+                            </optgroup>
+                            <optgroup label="Rio de Janeiro (2 unidades)">
+                                <option value="rj-centro">Rio de Janeiro - Centro</option>
+                                <option value="rj-copacabana">Rio de Janeiro - Copacabana</option>
+                            </optgroup>
+                            <optgroup label="Brasília (2 unidades)">
+                                <option value="bsb-sudoeste">Brasília - Sudoeste - 24h</option>
+                                <option value="bsb-asa-sul">Brasília - Asa Sul - Galeria Hotel Nacional</option>
+                            </optgroup>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label>Especialidades:</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="specialties" value="shiatsu"> Shiatsu
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="specialties" value="relaxante"> Relaxante
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="specialties" value="quick"> Quick Massage
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="specialties" value="terapeutica"> Terapêutica
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="specialties" value="reflexologia"> Reflexologia
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="specialties" value="drenagem"> Drenagem Linfática
-                            </label>
+                        <label>Especialidades e Preços:</label>
+                        <div id="specialtiesContainer" class="checkbox-group">
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="shiatsu" onchange="togglePriceInput(this)"> Shiatsu
+                                </label>
+                                <input type="number" class="price-input" name="price_shiatsu" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="quick" onchange="togglePriceInput(this)"> Quick Massage
+                                </label>
+                                <input type="number" class="price-input" name="price_quick" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="relaxante" onchange="togglePriceInput(this)"> Massagem Relaxante
+                                </label>
+                                <input type="number" class="price-input" name="price_relaxante" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="ventosaterapia" onchange="togglePriceInput(this)"> Ventosaterapia
+                                </label>
+                                <input type="number" class="price-input" name="price_ventosaterapia" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="drenagem" onchange="togglePriceInput(this)"> Drenagem Linfática
+                                </label>
+                                <input type="number" class="price-input" name="price_drenagem" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="redutora" onchange="togglePriceInput(this)"> Massagem Redutora
+                                </label>
+                                <input type="number" class="price-input" name="price_redutora" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="pedras-quentes" onchange="togglePriceInput(this)"> Terapia das Pedras Quentes
+                                </label>
+                                <input type="number" class="price-input" name="price_pedras-quentes" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="velas-quentes" onchange="togglePriceInput(this)"> Massagem com Velas Quentes
+                                </label>
+                                <input type="number" class="price-input" name="price_velas-quentes" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
+                            <div class="specialty-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="specialties" value="esfoliacao" onchange="togglePriceInput(this)"> Massagem Relaxante com Esfoliação
+                                </label>
+                                <input type="number" class="price-input" name="price_esfoliacao" placeholder="Preço R$" min="1" max="5000" step="0.01" style="display: none;">
+                            </div>
                         </div>
                     </div>
                     
@@ -1519,6 +1603,21 @@
             e.target.value = value;
         });
 
+        // Toggle price input visibility based on checkbox state
+        function togglePriceInput(checkbox) {
+            const parentDiv = checkbox.closest('.specialty-item');
+            const priceInput = parentDiv.querySelector('.price-input');
+            
+            if (checkbox.checked) {
+                priceInput.style.display = 'block';
+                priceInput.required = true;
+            } else {
+                priceInput.style.display = 'none';
+                priceInput.required = false;
+                priceInput.value = '';
+            }
+        }
+
         // Booking System Variables
         let selectedUnit = '';
         let selectedMassagista = '';
@@ -1527,62 +1626,54 @@
         let selectedTime = '';
         let currentStep = 1;
         
-        // Mock data for massagistas
-        const massagistas = {
-            'sp-perdizes': [
-                { id: 1, name: 'Ana Silva', specialties: 'Shiatsu, Relaxante', avatar: 'https://via.placeholder.com/60' },
-                { id: 2, name: 'Maria Santos', specialties: 'Quick, Terapêutica', avatar: 'https://via.placeholder.com/60' },
-                { id: 3, name: 'Julia Costa', specialties: 'Drenagem, Relaxante', avatar: 'https://via.placeholder.com/60' }
-            ],
-            'sp-vila-clementino': [
-                { id: 4, name: 'Patricia Lima', specialties: 'Shiatsu, Pedras Quentes', avatar: 'https://via.placeholder.com/60' },
-                { id: 5, name: 'Fernanda Alves', specialties: 'Quick, Relaxante', avatar: 'https://via.placeholder.com/60' }
-            ],
-            'sp-ingleses': [
-                { id: 6, name: 'Carla Rodrigues', specialties: 'Terapêutica, Shiatsu', avatar: 'https://via.placeholder.com/60' },
-                { id: 7, name: 'Roberta Nascimento', specialties: 'Relaxante, Drenagem', avatar: 'https://via.placeholder.com/60' },
-                { id: 8, name: 'Camila Ferreira', specialties: 'Quick, Pedras Quentes', avatar: 'https://via.placeholder.com/60' }
-            ],
-            'sp-prudente': [
-                { id: 9, name: 'Luciana Oliveira', specialties: 'Shiatsu, Relaxante', avatar: 'https://via.placeholder.com/60' }
-            ],
-            'rj-centro': [
-                { id: 10, name: 'Renata Castro', specialties: 'Quick, Terapêutica', avatar: 'https://via.placeholder.com/60' },
-                { id: 11, name: 'Beatriz Moreira', specialties: 'Relaxante, Drenagem', avatar: 'https://via.placeholder.com/60' }
-            ],
-            'rj-copacabana': [
-                { id: 12, name: 'Vanessa Silva', specialties: 'Shiatsu, Pedras Quentes', avatar: 'https://via.placeholder.com/60' },
-                { id: 13, name: 'Claudia Santos', specialties: 'Quick, Relaxante', avatar: 'https://via.placeholder.com/60' },
-                { id: 14, name: 'Adriana Lima', specialties: 'Terapêutica, Drenagem', avatar: 'https://via.placeholder.com/60' }
-            ],
-            'bsb-sudoeste': [
-                { id: 15, name: 'Monica Pereira', specialties: 'Shiatsu, Relaxante', avatar: 'https://via.placeholder.com/60' },
-                { id: 16, name: 'Daniela Costa', specialties: 'Quick, Terapêutica', avatar: 'https://via.placeholder.com/60' }
-            ],
-            'bsb-asa-sul': [
-                { id: 17, name: 'Sandra Oliveira', specialties: 'Relaxante, Drenagem', avatar: 'https://via.placeholder.com/60' },
-                { id: 18, name: 'Helena Rodrigues', specialties: 'Shiatsu, Pedras Quentes', avatar: 'https://via.placeholder.com/60' }
-            ]
-        };
+        // No mock data - using only real registered massagistas
         
         // Load massagistas by selected unit
-        function loadMassagistasByUnit() {
-            selectedUnit = document.getElementById('unitSelect').value;
-            if (!selectedUnit) return;
-            
-            const unitMassagistas = massagistas[selectedUnit] || [];
+        async function loadMassagistasByUnit() {
+            const unitSelect = document.getElementById('unitSelect');
             const grid = document.getElementById('massagistaGrid');
             
-            grid.innerHTML = unitMassagistas.map(m => `
-                <div class="massagista-card" onclick="selectMassagista(${m.id}, '${m.name}')">
-                    <img src="${m.avatar}" alt="${m.name}">
-                    <h4>${m.name}</h4>
-                    <p>${m.specialties}</p>
-                </div>
-            `).join('');
+            if (!unitSelect || !grid) return;
             
-            // Show step 2
-            showStep(2);
+            selectedUnit = unitSelect.value;
+            if (!selectedUnit) {
+                grid.innerHTML = '<p>Selecione uma unidade para ver as massagistas disponíveis.</p>';
+                return;
+            }
+
+            try {
+                // Call API to get massagistas by unit
+                const response = await fetch(`http://localhost:10000/api/massagista/by-unit/${selectedUnit}`);
+                
+                if (response.ok) {
+                    const unitMassagistas = await response.json();
+                    
+                    if (unitMassagistas.length === 0) {
+                        grid.innerHTML = '<p>Nenhuma massagista disponível nesta unidade no momento.</p>';
+                        return;
+                    }
+                    
+                    grid.innerHTML = unitMassagistas.map(massagista => `
+                        <div class="massagista-card" onclick="selectMassagista(${massagista.id}, '${massagista.name}')">
+                            <div class="avatar-placeholder">${massagista.name.charAt(0)}</div>
+                            <h4>${massagista.name}</h4>
+                            <p>${massagista.specialties.join(', ')}</p>
+                            <span class="status ${massagista.is_available ? 'online' : 'offline'}">
+                                ${massagista.is_available ? 'Disponível' : 'Ocupada'}
+                            </span>
+                        </div>
+                    `).join('');
+                } else {
+                    console.error('Erro na resposta da API:', response.status);
+                    grid.innerHTML = '<p>Erro ao carregar massagistas. Tente novamente.</p>';
+                }
+                
+                // Show step 2
+                showStep(2);
+            } catch (error) {
+                console.error('Erro ao carregar massagistas da unidade:', error);
+                grid.innerHTML = '<p>Erro ao carregar massagistas. Tente novamente.</p>';
+            }
         }
         
         // Select massagista
@@ -1607,16 +1698,19 @@
         }
         
         // Generate smart calendar
-        function generateSmartCalendar() {
+        async function generateSmartCalendar() {
             const calendar = document.getElementById('smartCalendar');
             const today = new Date();
             const nextWeek = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000));
+            
+            // Load massagista availability for current month
+            const massagistaAvailability = await loadMassagistaAvailability();
             
             calendar.innerHTML = `
                 <div class="calendar-section">
                     <h4 style="margin-bottom: 10px; color: #47103C;">Selecione uma Data</h4>
                     <div class="calendar-dates">
-                        ${generateCalendarDates(today, nextWeek)}
+                        ${generateCalendarDates(today, nextWeek, massagistaAvailability)}
                     </div>
                 </div>
                 <div class="calendar-section">
@@ -1628,15 +1722,39 @@
             `;
         }
         
+        // Load massagista availability
+        async function loadMassagistaAvailability() {
+            if (!selectedMassagista) return {};
+            
+            try {
+                const currentDate = new Date();
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth() + 1;
+                
+                const response = await fetch(`http://localhost:10000/api/massagista/${selectedMassagista.id}/availability/month/${year}/${month}`);
+                if (response.ok) {
+                    return await response.json();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar disponibilidade:', error);
+            }
+            return {};
+        }
+        
         // Generate calendar dates
-        function generateCalendarDates(startDate, endDate) {
+        function generateCalendarDates(startDate, endDate, availability = {}) {
             const dates = [];
             const current = new Date(startDate);
             
             while (current <= endDate) {
-                const dayOfWeek = current.getDay();
-                const isAvailable = dayOfWeek !== 0; // Não abre aos domingos
                 const dateStr = current.toISOString().split('T')[0];
+                const dayAvailability = availability[dateStr];
+                
+                // Check if day is available based on massagista's settings
+                const isAvailable = dayAvailability && 
+                                  dayAvailability.status === 'available' && 
+                                  dayAvailability.time_slots && 
+                                  dayAvailability.time_slots.length > 0;
                 
                 dates.push(`
                     <div class="calendar-day ${isAvailable ? 'available' : 'unavailable'}" 
@@ -1653,7 +1771,7 @@
         }
         
         // Select date
-        function selectDate(dateStr) {
+        async function selectDate(dateStr) {
             selectedDate = dateStr;
             
             // Update visual selection
@@ -1661,19 +1779,41 @@
             document.querySelector(`[data-date="${dateStr}"]`).classList.add('selected');
             
             // Generate time slots
-            generateTimeSlots();
+            await generateTimeSlots(dateStr);
         }
         
         // Generate time slots
-        function generateTimeSlots() {
+        async function generateTimeSlots(dateStr) {
             const timeSlots = document.getElementById('timeSlots');
-            const availableTimes = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
             
-            timeSlots.innerHTML = availableTimes.map(time => `
-                <div class="time-slot available" onclick="selectTime('${time}')">
-                    ${time}
-                </div>
-            `).join('');
+            if (!selectedMassagista || !dateStr) {
+                timeSlots.innerHTML = '<div class="time-slot unavailable">Selecione uma data</div>';
+                return;
+            }
+            
+            try {
+                // Get availability for specific day
+                const response = await fetch(`http://localhost:10000/api/massagista/${selectedMassagista.id}/availability/day/${dateStr}`);
+                
+                if (response.ok) {
+                    const dayAvailability = await response.json();
+                    
+                    if (dayAvailability && dayAvailability.time_slots && dayAvailability.time_slots.length > 0) {
+                        timeSlots.innerHTML = dayAvailability.time_slots.map(time => `
+                            <div class="time-slot available" onclick="selectTime('${time}')">
+                                ${time}
+                            </div>
+                        `).join('');
+                    } else {
+                        timeSlots.innerHTML = '<div class="time-slot unavailable">Nenhum horário disponível</div>';
+                    }
+                } else {
+                    timeSlots.innerHTML = '<div class="time-slot unavailable">Nenhum horário disponível</div>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar horários:', error);
+                timeSlots.innerHTML = '<div class="time-slot unavailable">Erro ao carregar horários</div>';
+            }
         }
         
         // Select time
@@ -1738,7 +1878,7 @@
         }
 
         // Form submissions
-        document.getElementById('loginForm').onsubmit = function(e) {
+        document.getElementById('loginForm').onsubmit = async function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -1749,27 +1889,31 @@
             btnText.style.display = 'none';
             btnLoading.style.display = 'inline';
             
-            // Simulação de login (verificar se usuário existe no localStorage)
-            setTimeout(() => {
-                const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
-                const user = users.find(u => u.email === email && u.password === password);
+            try {
+                // Usar API real
+                const api = new APIService();
+                const response = await api.login({ email, password });
                 
-                if (user) {
-                    // Login bem-sucedido - mantém na página inicial
-                    localStorage.setItem('espacoviv_current_user', JSON.stringify(user));
-                    showUserMenu(user);
-                    document.getElementById('loginModal').style.display = 'none';
-                    alert('Login realizado com sucesso!');
+                if (response && response.access_token) {
+                    // Login bem-sucedido
+                    localStorage.setItem('espacoviv_token', response.access_token);
+                    localStorage.setItem('espacoviv_current_user', JSON.stringify(response.user));
+                    
+                    // Redirecionar para área do profissional
+                    alert('Login realizado com sucesso! Redirecionando para seus agendamentos...');
+                    window.location.href = 'dashboard.html';
                 } else {
-                    // Erro de login
-                    alert('E-mail ou senha incorretos!');
-                    btnText.style.display = 'inline';
-                    btnLoading.style.display = 'none';
+                    throw new Error('Resposta inválida da API');
                 }
-            }, 1500);
+            } catch (error) {
+                console.error('Erro no login:', error);
+                alert('E-mail ou senha incorretos!');
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
         }
         
-        document.getElementById('registerForm').onsubmit = function(e) {
+        document.getElementById('registerForm').onsubmit = async function(e) {
             e.preventDefault();
             
             const name = document.getElementById('registerName').value;
@@ -1780,6 +1924,18 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             const unit = document.getElementById('registerUnit').value;
             const specialties = Array.from(document.querySelectorAll('input[name="specialties"]:checked')).map(cb => cb.value);
+            
+            // Collect specialty prices
+            const specialtyPrices = [];
+            specialties.forEach(specialty => {
+                const priceInput = document.querySelector(`input[name="price_${specialty}"]`);
+                if (priceInput && priceInput.value) {
+                    specialtyPrices.push({
+                        specialty: specialty,
+                        price: parseFloat(priceInput.value)
+                    });
+                }
+            });
             
             // Validações
             if (password !== confirmPassword) {
@@ -1792,84 +1948,154 @@
                 return;
             }
             
+            if (specialtyPrices.length !== specialties.length) {
+                alert('Informe o preço para todas as especialidades selecionadas!');
+                return;
+            }
+            
+            // Validate prices
+            for (let sp of specialtyPrices) {
+                if (sp.price <= 0 || sp.price > 5000) {
+                    alert(`Preço para ${sp.specialty} deve estar entre R$ 1 e R$ 5.000!`);
+                    return;
+                }
+            }
+            
             // Simular loading
             const btnText = document.querySelector('#registerForm .btn-text');
             const btnLoading = document.querySelector('#registerForm .btn-loading');
             btnText.style.display = 'none';
             btnLoading.style.display = 'inline';
             
-            setTimeout(() => {
-                // Verificar se e-mail já existe
-                const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
-                const emailExists = users.some(u => u.email === email);
+            try {
+                // Usar API real para registro
+                const api = new APIService();
                 
-                if (emailExists) {
-                    alert('Este e-mail já está cadastrado!');
-                    btnText.style.display = 'inline';
-                    btnLoading.style.display = 'none';
+                // Preparar dados para API
+                const userData = {
+                    name,
+                    email,
+                    password,
+                    cpf: cpf.replace(/\D/g, ''), // Remove formatação
+                    phone: phone.replace(/\D/g, ''), // Remove formatação
+                    unit_preference: unit,
+                    specialties,
+                    specialty_prices: specialtyPrices,
+                    birth_date: "1990-01-01", // Valor padrão
+                    gender: "M", // Valor padrão
+                    experience_years: 1 // Valor padrão
+                };
+                
+                // Verificar se a senha atende aos critérios
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                if (!passwordRegex.test(password)) {
+                    alert('A senha deve conter:\n- Mínimo 8 caracteres\n- Uma letra maiúscula\n- Uma letra minúscula\n- Um número\n- Um caractere especial');
                     return;
                 }
                 
-                // Criar novo usuário
-                const newUser = {
-                    id: Date.now(),
-                    name,
-                    cpf,
-                    email,
-                    phone,
-                    password,
-                    unit,
-                    specialties,
-                    isOnline: false,
-                    availability: {}, // Será preenchido no dashboard
-                    appointments: [],
-                    createdAt: new Date().toISOString()
-                };
+                console.log('Enviando dados para API:', userData);
+                const response = await api.register(userData);
+                console.log('Resposta da API:', response);
                 
-                users.push(newUser);
-                localStorage.setItem('espacoviv_users', JSON.stringify(users));
+                if (response && (response.message || response.user_id)) {
+                    alert('Cadastro realizado com sucesso! Agora você pode fazer login.');
+                    
+                    // Voltar para o formulário de login
+                    document.getElementById('showLoginForm').click();
+                    document.getElementById('registerForm').reset();
+                } else {
+                    throw new Error('Resposta inválida da API: ' + JSON.stringify(response));
+                }
                 
-                alert('Cadastro realizado com sucesso! Agora você pode fazer login.');
+            } catch (error) {
+                console.error('Erro no registro:', error);
                 
-                // Voltar para o formulário de login
-                document.getElementById('showLoginForm').click();
-                document.getElementById('registerForm').reset();
+                let errorMessage = 'Erro no cadastro. Tente novamente.';
                 
-                btnText.style.display = 'inline';
-                btnLoading.style.display = 'none';
-            }, 2000);
+                if (error.detail) {
+                    if (typeof error.detail === 'string') {
+                        errorMessage = error.detail;
+                    } else if (error.detail.message) {
+                        errorMessage = error.detail.message;
+                        if (error.detail.errors) {
+                            errorMessage += '\n' + error.detail.errors.join('\n');
+                        }
+                    }
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                alert(errorMessage);
+            }
+            
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
         }
         
         // Initialize booking form
         document.addEventListener('DOMContentLoaded', function() {
             loadMassagistas();
-            document.getElementById('dataSelect').min = new Date().toISOString().split('T')[0];
+            const dataSelect = document.getElementById('dataSelect');
+            if (dataSelect) {
+                dataSelect.min = new Date().toISOString().split('T')[0];
+            }
         });
         
-        function loadMassagistas() {
-            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
-            const massagistas = users.filter(user => user.isOnline);
+        async function loadMassagistas() {
             const select = document.getElementById('massagistaSelect');
+            if (!select) return; // Verificar se elemento existe
             
-            select.innerHTML = '<option value="">Selecione uma massagista</option>';
-            
-            massagistas.forEach(massagista => {
-                const option = document.createElement('option');
-                option.value = massagista.id;
-                option.textContent = `${massagista.name} - ${getUnitName(massagista.unit)}`;
-                select.appendChild(option);
-            });
-            
-            if (massagistas.length === 0) {
-                select.innerHTML = '<option value="">Nenhuma massagista online no momento</option>';
+            try {
+                // Usar nova API se disponível
+                if (window.app && window.app.api) {
+                    const units = await window.app.api.getUnits();
+                    const defaultUnit = units.length > 0 ? units[0].code : 'sp-perdizes';
+                    const massagistas = await window.app.api.request(`/massagista/by-unit/${defaultUnit}`);
+                    
+                    select.innerHTML = '<option value="">Selecione uma massagista</option>';
+                    massagistas.forEach(massagista => {
+                        const option = document.createElement('option');
+                        option.value = massagista.id;
+                        option.textContent = `${massagista.name} - ${massagista.specialties.join(', ')}`;
+                        select.appendChild(option);
+                    });
+                } else {
+                    // Fallback para dados locais
+                    const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
+                    const massagistas = users.filter(user => user.isOnline);
+                    
+                    select.innerHTML = '<option value="">Selecione uma massagista</option>';
+                    massagistas.forEach(massagista => {
+                        const option = document.createElement('option');
+                        option.value = massagista.id;
+                        option.textContent = massagista.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar massagistas:', error);
+                select.innerHTML = '<option value="">Erro ao carregar massagistas</option>';
             }
         }
         
         function getUnitName(unit) {
             const units = {
+                // São Paulo
                 'sp': 'São Paulo - Perdizes',
+                'sp-ingleses': 'São Paulo - Ingleses [Matriz]',
+                'sp-perdizes': 'São Paulo - Perdizes', 
+                'sp-vila-clementino': 'São Paulo - Vila Clementino',
+                'sp-prudente': 'São Paulo - Prudente de Moraes',
+                
+                // Rio de Janeiro
                 'rj': 'Rio de Janeiro - Centro',
-                'bsb': 'Brasília - SHS'
+                'rj-centro': 'Rio de Janeiro - Centro',
+                'rj-copacabana': 'Rio de Janeiro - Copacabana',
+                
+                // Brasília
+                'bsb': 'Brasília - SHS',
+                'bsb-sudoeste': 'Brasília - Sudoeste',
+                'bsb-asa-sul': 'Brasília - Asa Sul (Galeria Hotel Nacional)'
             };
             return units[unit] || 'Unidade não definida';
         }
@@ -1987,7 +2213,7 @@
             document.getElementById('loginBtn').style.display = 'none';
             document.getElementById('userMenu').style.display = 'block';
             document.getElementById('userName').textContent = user.name.toUpperCase();
-            document.getElementById('userLocation').textContent = getUnitName(user.unit);
+            document.getElementById('userLocation').textContent = getUnitName(user.unit_preference);
         }
         
         function hideUserMenu() {
@@ -2028,86 +2254,36 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                const href = this.getAttribute('href');
+                if (href && href.length > 1) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
                 }
             });
         });
 
-        // Adicionar seção de teste de APIs (somente no localhost)
-        if (window.location.hostname === 'localhost') {
-            addAPITestSection();
-        }
-
-        function addAPITestSection() {
-            const testSection = document.createElement('div');
-            testSection.innerHTML = `
-                <div style="position: fixed; top: 10px; right: 10px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10000; max-width: 300px;">
-                    <h4 style="margin: 0 0 15px 0; color: #2c5530;">🧪 Teste das APIs</h4>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <button onclick="testAPI('health')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Health Check</button>
-                        <button onclick="testAPI('units')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Unidades</button>
-                        <button onclick="testAPI('services')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Serviços</button>
-                        <button onclick="testAPI('password')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Validar Senha</button>
-                        <button onclick="testAPI('calendar')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Calendário</button>
-                        <button onclick="testAPI('next-slot')" style="padding: 8px 12px; background: #6b8e23; color: white; border: none; border-radius: 4px; cursor: pointer;">Próximo Slot</button>
-                    </div>
-                    <div id="apiResults" style="margin-top: 15px; max-height: 200px; overflow-y: auto; font-size: 12px; background: #f8f9fa; padding: 8px; border-radius: 4px; display: none;"></div>
-                </div>
-            `;
-            document.body.appendChild(testSection);
-        }
 
         // Initialize app with API integration
-        window.app = new EspacoVivApp();
+        // window.app = new EspacoVivApp();
 
-        async function testAPI(type) {
-            const resultsDiv = document.getElementById('apiResults');
-            resultsDiv.style.display = 'block';
-            
-            try {
-                let result;
-                const api = window.app?.api || new APIService();
-                
-                switch(type) {
-                    case 'health':
-                        result = await api.request('/health');
-                        break;
-                    case 'units':
-                        result = await api.getUnits();
-                        break;
-                    case 'services':
-                        result = await api.getServices();
-                        break;
-                    case 'password':
-                        result = await api.validatePassword('MinhaSenh@123');
-                        break;
-                    case 'calendar':
-                        const today = new Date().toISOString().split('T')[0];
-                        result = await api.getDayAvailability('sp-perdizes', today);
-                        break;
-                    case 'next-slot':
-                        result = await api.getNextAvailableSlot('sp-perdizes');
-                        break;
+        // Fix missing images with fallback
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add error handlers to all existing images
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                if (!img.onerror) {
+                    img.onerror = function() {
+                        this.src = 'https://via.placeholder.com/400x300/6b8e23/ffffff?text=Espaço+VIV';
+                    };
                 }
-                
-                resultsDiv.innerHTML = `
-                    <strong style="color: green;">✅ ${type.toUpperCase()} OK</strong><br>
-                    <pre style="white-space: pre-wrap; margin: 5px 0;">${JSON.stringify(result, null, 2)}</pre>
-                    ${resultsDiv.innerHTML}
-                `;
-            } catch (error) {
-                resultsDiv.innerHTML = `
-                    <strong style="color: red;">❌ ${type.toUpperCase()} ERROR</strong><br>
-                    <span style="color: red;">${error.message}</span><br>
-                    ${resultsDiv.innerHTML}
-                `;
-            }
-        }
+            });
+        });
+
     </script>
 
     <!-- Include main.js with API integration -->

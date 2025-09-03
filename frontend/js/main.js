@@ -23,7 +23,23 @@ class APIService {
                 const errorData = await response.json().catch(() => ({ 
                     message: `HTTP Error: ${response.status}` 
                 }));
-                throw new Error(errorData.message || errorData.detail || 'Erro na API');
+                
+                // Handle different error formats
+                let errorMessage = 'Erro na API';
+                if (errorData.detail) {
+                    if (typeof errorData.detail === 'string') {
+                        errorMessage = errorData.detail;
+                    } else if (errorData.detail.message) {
+                        errorMessage = errorData.detail.message;
+                        if (errorData.detail.errors) {
+                            errorMessage += ':\n' + errorData.detail.errors.join('\n');
+                        }
+                    }
+                } else if (errorData.message) {
+                    errorMessage = errorData.message;
+                }
+                
+                throw new Error(errorMessage);
             }
             return await response.json();
         } catch (error) {
@@ -383,9 +399,12 @@ class EspacoVivApp {
     }
 }
 
+// Define EspacoVIV object
+const EspacoVIV = {};
+
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    window.espacoVivApp = new EspacoVivApp();
+    // window.espacoVivApp = new EspacoVivApp();
 });
     
     EspacoVIV.initSwiper = function() {
@@ -1026,5 +1045,3 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.console) {
         window.EspacoVIV = EspacoVIV;
     }
-    
-})(jQuery);

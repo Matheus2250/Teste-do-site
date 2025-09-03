@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Massagista | Espaço VIV</title>
+    <title>Meus Agendamentos - Massagista | Espaço VIV</title>
     
     <!-- Favicon -->
     <link rel="shortcut icon" href="https://espacoviv.com/wp-content/uploads/2018/09/icon-16.png" type="image/x-icon" />
@@ -73,6 +73,7 @@
             align-items: center;
             gap: 15px;
         }
+
 
         .status-toggle {
             display: flex;
@@ -261,6 +262,12 @@
             border-left: 4px solid #dc3545;
         }
 
+        .calendar-day.selected {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
         .day-number {
             font-weight: 600;
             margin-bottom: 5px;
@@ -317,6 +324,56 @@
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 5px;
+        }
+
+        /* Specialties Grid */
+        .specialties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .specialty-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .specialty-card:hover {
+            border-color: #47103C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(71, 16, 60, 0.15);
+        }
+
+        .specialty-name {
+            font-weight: 600;
+            color: #47103C;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .specialty-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #28a745;
+            background: #e8f5e8;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .no-specialties {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
         }
 
         .stat-label {
@@ -649,7 +706,7 @@
             <div class="logo">
                 <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
                     <img src="https://espacoviv.com/wp-content/uploads/2019/06/logo-espaco-viv-rj.png" alt="Espaço VIV">
-                    <h1>Área do Profissional</h1>
+                    <h1>Meus Agendamentos</h1>
                 </a>
             </div>
             
@@ -673,6 +730,7 @@
             </div>
         </div>
     </header>
+
 
     <!-- Main Content -->
     <div class="dashboard-main">
@@ -699,15 +757,25 @@
                 </div>
             </div>
             
+            <!-- Instructions -->
+            <div style="margin-top: 15px; text-align: center; color: #666; font-size: 0.9rem;">
+                <div style="margin-bottom: 10px;">
+                    <i class="fas fa-info-circle" style="color: #47103C;"></i> 
+                    <strong>Como usar:</strong>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <span><i class="fas fa-mouse-pointer"></i> <strong>Clique simples:</strong> Selecionar dia</span>
+                    <span><i class="fas fa-mouse-pointer"></i> <strong>Duplo clique:</strong> Configurar horários</span>
+                    <span><i class="fas fa-keyboard"></i> <strong>Ctrl + Clique:</strong> Configurar horários</span>
+                </div>
+            </div>
+            
             <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" onclick="setWeekAvailability(true)">
-                    <i class="fas fa-check"></i> Marcar Semana como Disponível
+                    <i class="fas fa-check"></i> Disponível esta semana
                 </button>
                 <button class="btn btn-secondary" onclick="setWeekAvailability(false)">
-                    <i class="fas fa-times"></i> Marcar Semana como Indisponível
-                </button>
-                <button class="btn btn-secondary" onclick="clearSampleData()" style="font-size: 12px; padding: 8px 15px;">
-                    <i class="fas fa-trash"></i> Limpar Dados Exemplo
+                    <i class="fas fa-times"></i> Indisponível esta semana
                 </button>
             </div>
         </div>
@@ -736,6 +804,14 @@
                     <div class="stat-card">
                         <div class="stat-number" id="totalAppointments">0</div>
                         <div class="stat-label">Total</div>
+                    </div>
+                </div>
+                
+                <!-- Specialties and Prices Section -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3><i class="fas fa-spa"></i> Suas Especialidades e Preços</h3>
+                    <div id="specialtiesList" class="specialties-grid">
+                        <!-- Specialties will be loaded here -->
                     </div>
                 </div>
             </div>
@@ -797,124 +873,21 @@
         let currentUser = null;
         let currentDate = new Date();
         let selectedDay = null;
+        let selectedDayElement = null;
         
-        // Initialize dashboard
+        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
-            createSampleData(); // Criar dados de exemplo após carregar usuário
             initializeCalendar();
             loadUserStats();
             loadTodayAppointments();
+            loadUserSpecialties();
             generateTimeSlots();
+            updateWeekButtons(); // Initialize buttons as disabled
         });
         
         function createSampleData() {
-            // Só criar dados se não existirem
-            const existingAppointments = localStorage.getItem('espacoviv_appointments');
-            if (existingAppointments && JSON.parse(existingAppointments).length > 0) {
-                return; // Já tem dados, não criar novos
-            }
-
-            const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(today.getDate() + 1);
-            const dayAfter = new Date(today);
-            dayAfter.setDate(today.getDate() + 2);
-
-            // Dados de exemplo de agendamentos
-            const sampleAppointments = [
-                {
-                    id: "sample1",
-                    clientName: "Maria Silva",
-                    phone: "(11) 99999-1111",
-                    unit: "sp",
-                    service: "shiatsu",
-                    massagistId: currentUser.id,
-                    date: today.toISOString().split('T')[0],
-                    time: "09:00",
-                    notes: "Primeira sessão",
-                    status: "confirmed",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: "sample2",
-                    clientName: "João Santos",
-                    phone: "(11) 98888-2222",
-                    unit: "sp",
-                    service: "relaxante",
-                    massagistId: currentUser.id,
-                    date: today.toISOString().split('T')[0],
-                    time: "14:00",
-                    notes: "Dores nas costas",
-                    status: "confirmed",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: "sample3",
-                    clientName: "Ana Costa",
-                    phone: "(11) 97777-3333",
-                    unit: "sp",
-                    service: "terapeutica",
-                    massagistId: currentUser.id,
-                    date: tomorrow.toISOString().split('T')[0],
-                    time: "10:00",
-                    notes: "",
-                    status: "confirmed",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: "sample4",
-                    clientName: "Carlos Lima",
-                    phone: "(11) 96666-4444",
-                    unit: "sp",
-                    service: "quick",
-                    massagistId: currentUser.id,
-                    date: dayAfter.toISOString().split('T')[0],
-                    time: "16:30",
-                    notes: "Tensão no pescoço",
-                    status: "confirmed",
-                    createdAt: new Date().toISOString()
-                }
-            ];
-
-            localStorage.setItem('espacoviv_appointments', JSON.stringify(sampleAppointments));
-            
-            // Adicionar disponibilidade de exemplo para os próximos dias
-            if (!currentUser.availability) {
-                currentUser.availability = {};
-            }
-            
-            // Disponibilidade para hoje
-            const todayKey = today.toISOString().split('T')[0];
-            currentUser.availability[todayKey] = {
-                status: 'available',
-                timeSlots: ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00']
-            };
-            
-            // Disponibilidade para amanhã
-            const tomorrowKey = tomorrow.toISOString().split('T')[0];
-            currentUser.availability[tomorrowKey] = {
-                status: 'available',
-                timeSlots: ['09:00', '09:30', '10:00', '10:30', '11:00', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30']
-            };
-            
-            // Disponibilidade para depois de amanhã
-            const dayAfterKey = dayAfter.toISOString().split('T')[0];
-            currentUser.availability[dayAfterKey] = {
-                status: 'available',
-                timeSlots: ['08:00', '08:30', '09:00', '13:00', '13:30', '14:00', '15:00', '16:00', '16:30', '17:00', '17:30']
-            };
-            
-            // Atualizar o usuário no localStorage
-            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
-            const userIndex = users.findIndex(u => u.id === currentUser.id);
-            if (userIndex !== -1) {
-                users[userIndex] = currentUser;
-                localStorage.setItem('espacoviv_users', JSON.stringify(users));
-                localStorage.setItem('espacoviv_current_user', JSON.stringify(currentUser));
-            }
-            
-            console.log('Dados de exemplo criados!');
+            // Função removida - não criar mais dados de exemplo
         }
 
         function checkAuth() {
@@ -926,12 +899,18 @@
             }
             
             currentUser = JSON.parse(user);
+            
+            // Garantir que availability existe
+            if (!currentUser.availability) {
+                currentUser.availability = {};
+            }
+            
             updateUserInfo();
         }
         
         function updateUserInfo() {
             document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userUnit').textContent = getUnitName(currentUser.unit);
+            document.getElementById('userUnit').textContent = getUnitName(currentUser.unit_preference);
             
             // Update status
             const statusToggle = document.getElementById('statusToggle');
@@ -951,9 +930,22 @@
         
         function getUnitName(unit) {
             const units = {
+                // São Paulo
                 'sp': 'São Paulo - Perdizes',
+                'sp-ingleses': 'São Paulo - Ingleses [Matriz]',
+                'sp-perdizes': 'São Paulo - Perdizes', 
+                'sp-vila-clementino': 'São Paulo - Vila Clementino',
+                'sp-prudente': 'São Paulo - Prudente de Moraes',
+                
+                // Rio de Janeiro
                 'rj': 'Rio de Janeiro - Centro',
-                'bsb': 'Brasília - SHS'
+                'rj-centro': 'Rio de Janeiro - Centro',
+                'rj-copacabana': 'Rio de Janeiro - Copacabana',
+                
+                // Brasília
+                'bsb': 'Brasília - SHS',
+                'bsb-sudoeste': 'Brasília - Sudoeste',
+                'bsb-asa-sul': 'Brasília - Asa Sul (Galeria Hotel Nacional)'
             };
             return units[unit] || 'Unidade não definida';
         }
@@ -974,25 +966,10 @@
             updateUserInfo();
         };
         
-        function clearSampleData() {
-            if (confirm('Tem certeza que deseja limpar todos os dados de exemplo? Isso removerá agendamentos e disponibilidades.')) {
-                localStorage.removeItem('espacoviv_appointments');
-                // Limpar disponibilidade do usuário atual
-                currentUser.availability = {};
-                const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
-                const userIndex = users.findIndex(u => u.id === currentUser.id);
-                if (userIndex !== -1) {
-                    users[userIndex] = currentUser;
-                    localStorage.setItem('espacoviv_users', JSON.stringify(users));
-                    localStorage.setItem('espacoviv_current_user', JSON.stringify(currentUser));
-                }
-                // Recarregar a página para atualizar os dados
-                location.reload();
-            }
-        }
 
         function logout() {
             if (confirm('Tem certeza que deseja sair?')) {
+                localStorage.removeItem('espacoviv_token');
                 localStorage.removeItem('espacoviv_current_user');
                 window.location.href = 'index.html';
             }
@@ -1013,7 +990,7 @@
             };
         }
         
-        function generateCalendar() {
+        async function generateCalendar() {
             const calendar = document.getElementById('calendar');
             const currentMonth = document.getElementById('currentMonth');
             
@@ -1024,6 +1001,39 @@
                 month: 'long',
                 year: 'numeric'
             });
+
+            // Load month availability from API
+            let monthAvailability = {};
+            try {
+                const token = localStorage.getItem('espacoviv_token');
+                if (!token) {
+                    console.warn('No token found, redirecting to login');
+                    alert('Sessão expirada. Redirecionando para o login.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                const response = await fetch(`http://localhost:10000/api/massagista/availability/month/${year}/${month + 1}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.status === 401) {
+                    console.warn('Invalid token, redirecting to login');
+                    alert('Sessão expirada. Redirecionando para o login.');
+                    localStorage.removeItem('espacoviv_token');
+                    localStorage.removeItem('espacoviv_current_user');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                if (response.ok) {
+                    monthAvailability = await response.json();
+                } else {
+                    console.error('Error loading availability:', response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error('Error loading month availability:', error);
+            }
             
             // Clear calendar
             calendar.innerHTML = '';
@@ -1066,9 +1076,9 @@
                     dayElement.classList.add('today');
                 }
                 
-                // Get availability for this day
+                // Get availability for this day from API data
                 const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const availability = currentUser.availability[dateKey];
+                const availability = monthAvailability[dateKey];
                 
                 if (availability) {
                     const statusElement = document.createElement('div');
@@ -1077,9 +1087,9 @@
                     dayElement.appendChild(statusElement);
                     dayElement.classList.add(availability.status);
                     
-                    if (availability.status === 'available' && availability.timeSlots) {
+                    if (availability.status === 'available' && availability.time_slots) {
                         const appointmentsCount = getAppointmentsForDay(dateKey).length;
-                        const availableSlots = availability.timeSlots.length - appointmentsCount;
+                        const availableSlots = availability.time_slots.length - appointmentsCount;
                         
                         if (availableSlots > 0) {
                             const slotsElement = document.createElement('div');
@@ -1090,24 +1100,85 @@
                     }
                 }
                 
-                // Add click event
-                dayElement.onclick = () => openDayModal(year, month, day);
+                // Add click events
+                dayElement.onclick = (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        // Ctrl+Click opens day modal for time slots
+                        openDayModal(year, month, day);
+                    } else {
+                        // Regular click selects day for week operations
+                        selectDay(dayElement, year, month, day);
+                    }
+                };
+                
+                // Double click also opens day modal
+                dayElement.ondblclick = () => openDayModal(year, month, day);
                 
                 calendar.appendChild(dayElement);
             }
         }
         
-        function openDayModal(year, month, day) {
+        function selectDay(dayElement, year, month, day) {
+            // Remove previous selection
+            if (selectedDayElement) {
+                selectedDayElement.classList.remove('selected');
+            }
+            
+            // Select current day
+            selectedDayElement = dayElement;
+            dayElement.classList.add('selected');
+            
+            selectedDay = { year, month, day };
+            
+            // Update button text to show selected day
+            updateWeekButtons();
+        }
+        
+        function updateWeekButtons() {
+            const availableBtn = document.querySelector('.btn[onclick="setWeekAvailability(true)"]');
+            const unavailableBtn = document.querySelector('.btn[onclick="setWeekAvailability(false)"]');
+            
+            if (selectedDay) {
+                const dateStr = `${selectedDay.day}/${selectedDay.month + 1}`;
+                availableBtn.innerHTML = `<i class="fas fa-check"></i> Disponível semana de ${dateStr}`;
+                unavailableBtn.innerHTML = `<i class="fas fa-times"></i> Indisponível semana de ${dateStr}`;
+                
+                // Enable buttons
+                availableBtn.style.opacity = '1';
+                unavailableBtn.style.opacity = '1';
+                availableBtn.disabled = false;
+                unavailableBtn.disabled = false;
+            } else {
+                availableBtn.innerHTML = `<i class="fas fa-check"></i> Selecione um dia primeiro`;
+                unavailableBtn.innerHTML = `<i class="fas fa-times"></i> Selecione um dia primeiro`;
+                
+                // Disable buttons
+                availableBtn.style.opacity = '0.5';
+                unavailableBtn.style.opacity = '0.5';
+                availableBtn.disabled = true;
+                unavailableBtn.disabled = true;
+            }
+        }
+        
+        async function openDayModal(year, month, day) {
             selectedDay = { year, month, day };
             const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             
             document.getElementById('modalTitle').textContent = `Disponibilidade - ${day}/${month + 1}/${year}`;
             
-            // Load current settings
-            const availability = currentUser.availability[dateKey] || { status: 'available', timeSlots: [] };
-            document.getElementById('dayStatus').value = availability.status;
+            // Load current settings from API
+            let availability = { status: 'available', time_slots: [] };
+            try {
+                const response = await fetch(`http://localhost:10000/api/calendar/day/${dateKey}`);
+                if (response.ok) {
+                    availability = await response.json();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar disponibilidade do dia:', error);
+            }
             
-            generateTimeSlots(availability.timeSlots);
+            document.getElementById('dayStatus').value = availability.status;
+            generateTimeSlots(availability.time_slots || []);
             toggleTimeSlots();
             
             document.getElementById('dayModal').style.display = 'block';
@@ -1115,6 +1186,8 @@
         
         function generateTimeSlots(selectedSlots = []) {
             const container = document.getElementById('timeSlots');
+            if (!container) return;
+            
             container.innerHTML = '';
             
             // Generate time slots from 8:00 to 20:00
@@ -1131,12 +1204,14 @@
                         slot.classList.add('selected');
                     }
                     
-                    // Check if slot is already booked
-                    const dateKey = `${selectedDay.year}-${String(selectedDay.month + 1).padStart(2, '0')}-${String(selectedDay.day).padStart(2, '0')}`;
-                    const appointments = getAppointmentsForDay(dateKey);
-                    if (appointments.some(apt => apt.time === timeString)) {
-                        slot.classList.add('unavailable');
-                        slot.onclick = null;
+                    // Check if slot is already booked (only if selectedDay exists)
+                    if (selectedDay && selectedDay.year) {
+                        const dateKey = `${selectedDay.year}-${String(selectedDay.month + 1).padStart(2, '0')}-${String(selectedDay.day).padStart(2, '0')}`;
+                        const appointments = getAppointmentsForDay(dateKey);
+                        if (appointments.some(apt => apt.time === timeString)) {
+                            slot.classList.add('unavailable');
+                            slot.onclick = null;
+                        }
                     }
                     
                     container.appendChild(slot);
@@ -1165,7 +1240,7 @@
         }
         
         // Form submission
-        document.getElementById('dayForm').onsubmit = function(e) {
+        document.getElementById('dayForm').onsubmit = async function(e) {
             e.preventDefault();
             
             const dateKey = `${selectedDay.year}-${String(selectedDay.month + 1).padStart(2, '0')}-${String(selectedDay.day).padStart(2, '0')}`;
@@ -1176,80 +1251,115 @@
                 timeSlots = Array.from(document.querySelectorAll('.time-slot.selected:not(.unavailable)')).map(slot => slot.textContent);
             }
             
-            // Update user availability
-            if (!currentUser.availability) {
-                currentUser.availability = {};
+            try {
+                const token = localStorage.getItem('espacoviv_token');
+                if (!token) {
+                    alert('Token de autenticação não encontrado. Faça login novamente.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                const response = await fetch(`http://localhost:10000/api/test/availability/day/${dateKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        status: status,
+                        time_slots: timeSlots
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro ao salvar disponibilidade: ${response.status}`);
+                }
+                
+                // Regenerate calendar and close modal
+                await generateCalendar();
+                closeModal();
+                
+                alert('Disponibilidade atualizada com sucesso!');
+                
+            } catch (error) {
+                console.error('Erro ao salvar disponibilidade:', error);
+                alert('Erro ao salvar disponibilidade. Tente novamente.');
             }
-            
-            currentUser.availability[dateKey] = {
-                status: status,
-                timeSlots: timeSlots
-            };
-            
-            // Update localStorage
-            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
-            const userIndex = users.findIndex(u => u.id === currentUser.id);
-            if (userIndex !== -1) {
-                users[userIndex] = currentUser;
-                localStorage.setItem('espacoviv_users', JSON.stringify(users));
-                localStorage.setItem('espacoviv_current_user', JSON.stringify(currentUser));
-            }
-            
-            // Regenerate calendar and close modal
-            generateCalendar();
-            closeModal();
-            
-            alert('Disponibilidade atualizada com sucesso!');
         };
         
         function closeModal() {
             document.getElementById('dayModal').style.display = 'none';
         }
         
-        function setWeekAvailability(available) {
-            const startOfWeek = new Date(currentDate);
+        async function setWeekAvailability(available) {
+            if (!selectedDay) {
+                alert('Por favor, selecione um dia no calendário primeiro!');
+                return;
+            }
+            
+            const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
+            const startOfWeek = new Date(selectedDate);
             startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
             
+            // Prepare week dates
+            const weekDates = [];
             for (let i = 0; i < 7; i++) {
                 const date = new Date(startOfWeek);
                 date.setDate(startOfWeek.getDate() + i);
-                
-                const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                
-                if (!currentUser.availability) {
-                    currentUser.availability = {};
-                }
-                
-                if (available) {
-                    // Set available with default time slots
-                    const defaultSlots = [];
-                    for (let hour = 9; hour <= 18; hour++) {
-                        defaultSlots.push(`${String(hour).padStart(2, '0')}:00`);
-                    }
-                    
-                    currentUser.availability[dateKey] = {
-                        status: 'available',
-                        timeSlots: defaultSlots
-                    };
-                } else {
-                    currentUser.availability[dateKey] = {
-                        status: 'unavailable',
-                        timeSlots: []
-                    };
-                }
+                weekDates.push(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
             }
             
-            // Update localStorage
-            const users = JSON.parse(localStorage.getItem('espacoviv_users') || '[]');
-            const userIndex = users.findIndex(u => u.id === currentUser.id);
-            if (userIndex !== -1) {
-                users[userIndex] = currentUser;
-                localStorage.setItem('espacoviv_users', JSON.stringify(users));
-                localStorage.setItem('espacoviv_current_user', JSON.stringify(currentUser));
+            try {
+                const token = localStorage.getItem('espacoviv_token');
+                if (!token) {
+                    alert('Token de autenticação não encontrado. Faça login novamente.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // Prepare time slots
+                const timeSlots = available ? 
+                    Array.from({length: 10}, (_, i) => `${String(i + 9).padStart(2, '0')}:00`) : [];
+                
+                const requestBody = {
+                    dates: weekDates,
+                    status: available ? 'available' : 'unavailable',
+                    time_slots: timeSlots
+                };
+                
+                console.log('Enviando dados para API:', requestBody);
+                console.log('Dates detalhadas:', weekDates);
+                console.log('Status:', available ? 'available' : 'unavailable');
+                console.log('Time slots:', timeSlots);
+                
+                const response = await fetch('http://localhost:10000/api/test/availability/week', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro ao salvar disponibilidade: ${response.status}`);
+                }
+                
+                // Refresh calendar to show updated availability
+                await generateCalendar();
+                
+                const dateStr = `${selectedDay.day}/${selectedDay.month + 1}/${selectedDay.year}`;
+                alert(`Semana de ${dateStr} marcada como ${available ? 'disponível' : 'indisponível'}!`);
+                
+                // Clear selection after action
+                selectedDay = null;
+                selectedDayElement = null;
+                updateWeekButtons();
+                
+            } catch (error) {
+                console.error('Erro ao definir disponibilidade da semana:', error);
+                alert('Erro ao salvar disponibilidade da semana. Tente novamente.');
             }
-            
-            generateCalendar();
-            alert(`Semana marcada como ${available ? 'disponível' : 'indisponível'}!`);
         }
         
         function loadUserStats() {
@@ -1283,14 +1393,18 @@
             document.getElementById('totalAppointments').textContent = userAppointments.length;
         }
         
-        function loadTodayAppointments() {
-            const allAppointments = JSON.parse(localStorage.getItem('espacoviv_appointments') || '[]');
-            const todayKey = new Date().toISOString().split('T')[0];
-            const todayAppointments = allAppointments.filter(apt => 
-                apt.massagistId === currentUser.id && 
-                apt.date === todayKey &&
-                apt.status !== 'cancelled'
-            ).sort((a, b) => a.time.localeCompare(b.time));
+        async function loadTodayAppointments() {
+            let todayAppointments = [];
+            
+            try {
+                const response = await fetch('http://localhost:10000/api/massagista/appointments/today');
+                if (response.ok) {
+                    todayAppointments = await response.json();
+                    console.log('Agendamentos hoje carregados:', todayAppointments);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar agendamentos de hoje:', error);
+            }
             
             const container = document.getElementById('todayAppointmentsList');
             
@@ -1310,15 +1424,60 @@
                 const item = document.createElement('div');
                 item.className = 'appointment-item';
                 item.innerHTML = `
-                    <div class="appointment-time">${apt.time}</div>
+                    <div class="appointment-time">${apt.appointment_time}</div>
                     <div class="appointment-details">
-                        <h4>${apt.clientName}</h4>
-                        <p>${apt.service} - ${apt.phone}</p>
+                        <h4>${apt.client_name}</h4>
+                        <p>${apt.service} - ${apt.client_phone}</p>
                         ${apt.notes ? `<p style="font-style: italic; color: #888;">${apt.notes}</p>` : ''}
                     </div>
                 `;
                 container.appendChild(item);
             });
+        }
+
+        function loadUserSpecialties() {
+            const specialtiesContainer = document.getElementById('specialtiesList');
+            
+            if (!currentUser.specialty_prices || currentUser.specialty_prices.length === 0) {
+                specialtiesContainer.innerHTML = `
+                    <div class="no-specialties">
+                        <i class="fas fa-spa" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Nenhuma especialidade cadastrada</p>
+                        <small>Edite seu perfil para adicionar suas especialidades e preços</small>
+                    </div>
+                `;
+                return;
+            }
+
+            const specialtyNames = {
+                'shiatsu': 'Shiatsu',
+                'quick': 'Quick Massage',
+                'relaxante': 'Massagem Relaxante',
+                'ventosaterapia': 'Ventosaterapia',
+                'drenagem': 'Drenagem Linfática',
+                'redutora': 'Massagem Redutora',
+                'pedras-quentes': 'Terapia das Pedras Quentes',
+                'velas-quentes': 'Massagem com Velas Quentes',
+                'esfoliacao': 'Massagem Relaxante com Esfoliação'
+            };
+
+            let specialtiesHTML = '';
+            currentUser.specialty_prices.forEach(sp => {
+                const displayName = specialtyNames[sp.specialty] || sp.specialty;
+                const formattedPrice = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(sp.price);
+
+                specialtiesHTML += `
+                    <div class="specialty-card">
+                        <div class="specialty-name">${displayName}</div>
+                        <div class="specialty-price">${formattedPrice}</div>
+                    </div>
+                `;
+            });
+
+            specialtiesContainer.innerHTML = specialtiesHTML;
         }
         
         // Modal close events
