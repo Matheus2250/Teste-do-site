@@ -14,9 +14,31 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import calendar as cal
 from collections import defaultdict
+from dotenv import load_dotenv
+
+# Carrega as variaveis de ambiente do arquivo .env
+load_dotenv()
+
+def validate_email_configuration():
+    """Validate email configuration on startup"""
+    email_enabled = os.getenv("EMAIL_ENABLED", "false").lower() == "true"
+    smtp_user = os.getenv("SMTP_USER", "")
+    smtp_password = os.getenv("SMTP_PASSWORD", "")
+    
+    if email_enabled and all([smtp_user, smtp_password]):
+        print("[EMAIL] Sistema de email configurado e ativado")
+        print(f"[EMAIL] Servidor SMTP: {os.getenv('SMTP_SERVER', 'smtp.gmail.com')}")
+        print(f"[EMAIL] Usuario: {smtp_user}")
+    elif email_enabled and not all([smtp_user, smtp_password]):
+        print("[EMAIL] AVISO: Email ativado mas credenciais incompletas")
+    else:
+        print("[EMAIL] Sistema de email desativado")
+
+# Validate email configuration on startup
+validate_email_configuration()
 
 app = FastAPI(
-    title="Espaço VIV API - Render",
+    title="Espaco VIV API - Render",
     description="API para sistema de agendamento de massagens",
     version="1.0.0"
 )
@@ -129,19 +151,19 @@ class AdvancedDayView(BaseModel):
 users_db = []
 
 units_db = [
-    # São Paulo (4 unidades)
-    {"id": 1, "code": "sp-ingleses", "name": "São Paulo - Ingleses [Matriz]", "address": "Bela Vista", "hours": "6h-22h"},
-    {"id": 2, "code": "sp-perdizes", "name": "São Paulo - Perdizes", "address": "R. Tavares Bastos, 564", "hours": "24h"},
-    {"id": 3, "code": "sp-vila-clementino", "name": "São Paulo - Vila Clementino", "address": "R. Dr. Bacelar, 82", "hours": "24h"},
-    {"id": 4, "code": "sp-prudente", "name": "São Paulo - Prudente de Moraes", "address": "R. Prudente de Moraes Neto, 81", "hours": "24h"},
+    # Sao Paulo (4 unidades)
+    {"id": 1, "code": "sp-ingleses", "name": "Sao Paulo - Ingleses [Matriz]", "address": "Bela Vista", "hours": "6h-22h"},
+    {"id": 2, "code": "sp-perdizes", "name": "Sao Paulo - Perdizes", "address": "R. Tavares Bastos, 564", "hours": "24h"},
+    {"id": 3, "code": "sp-vila-clementino", "name": "Sao Paulo - Vila Clementino", "address": "R. Dr. Bacelar, 82", "hours": "24h"},
+    {"id": 4, "code": "sp-prudente", "name": "Sao Paulo - Prudente de Moraes", "address": "R. Prudente de Moraes Neto, 81", "hours": "24h"},
     
     # Rio de Janeiro (2 unidades)
     {"id": 5, "code": "rj-centro", "name": "Rio de Janeiro - Centro", "address": "Av. Rio Branco, 185 - Sala 2103", "hours": "6h-22h"},
     {"id": 6, "code": "rj-copacabana", "name": "Rio de Janeiro - Copacabana", "address": "R. Barata Ribeiro, 391", "hours": "6h-22h"},
     
-    # Brasília (2 unidades)
-    {"id": 7, "code": "bsb-sudoeste", "name": "Brasília - Sudoeste", "address": "CCSW 01 Lote 04", "hours": "24h"},
-    {"id": 8, "code": "bsb-asa-sul", "name": "Brasília - Asa Sul", "address": "SHS Quadra 1 Bloco A - Galeria Hotel Nacional", "hours": "24h"}
+    # Brasilia (2 unidades)
+    {"id": 7, "code": "bsb-sudoeste", "name": "Brasilia - Sudoeste", "address": "CCSW 01 Lote 04", "hours": "24h"},
+    {"id": 8, "code": "bsb-asa-sul", "name": "Brasilia - Asa Sul", "address": "SHS Quadra 1 Bloco A - Galeria Hotel Nacional", "hours": "24h"}
 ]
 
 bookings_db = []
@@ -153,7 +175,7 @@ services_db = [
     {"id": 1, "name": "Shiatsu", "duration": 60, "price": 120.0},
     {"id": 2, "name": "Relaxante", "duration": 60, "price": 100.0},
     {"id": 3, "name": "Quick Massage", "duration": 15, "price": 40.0},
-    {"id": 4, "name": "Terapêutica", "duration": 75, "price": 150.0}
+    {"id": 4, "name": "Terapeutica", "duration": 75, "price": 150.0}
 ]
 
 # ============================================================================
@@ -179,20 +201,20 @@ def verify_access_token(token: str) -> Dict:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("user_id")
         if user_id is None:
-            raise HTTPException(status_code=401, detail="Token inválido")
+            raise HTTPException(status_code=401, detail="Token invalido")
         
         # Find user in database
         user = next((u for u in users_db if u["id"] == user_id), None)
         if user is None:
-            raise HTTPException(status_code=401, detail="Usuário não encontrado")
+            raise HTTPException(status_code=401, detail="Usuario nao encontrado")
         
         return user
     except ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expirado")
     except DecodeError:
-        raise HTTPException(status_code=401, detail="Token inválido")
+        raise HTTPException(status_code=401, detail="Token invalido")
     except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Erro na validação do token: {str(e)}")
+        raise HTTPException(status_code=401, detail=f"Erro na validacao do token: {str(e)}")
 
 def get_next_id(table: List) -> int:
     return max([item["id"] for item in table], default=0) + 1
@@ -249,34 +271,68 @@ def validate_password_strength(password: str) -> Dict[str, Any]:
     }
 
 def send_password_reset_email(email: str, reset_token: str):
-    """Send password reset email"""
+    """Send password reset email with professional configuration"""
+    # Email configuration from environment variables
+    email_enabled = os.getenv("EMAIL_ENABLED", "false").lower() == "true"
     smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_user = os.getenv("SMTP_USER", "")
     smtp_password = os.getenv("SMTP_PASSWORD", "")
+    from_name = os.getenv("EMAIL_FROM_NAME", "Espaco VIV")
+    reply_to = os.getenv("EMAIL_REPLY_TO", "noreply@espacoviv.com")
     
+    # Check if email is enabled and configured
+    if not email_enabled:
+        print(f"[EMAIL] Email desabilitado. Token de reset para {email}: {reset_token}")
+        return False
+        
     if not all([smtp_user, smtp_password]):
-        print(f"⚠️ Email não configurado. Reset token para {email}: {reset_token}")
+        print(f"[EMAIL] Configuracao incompleta. Token de reset para {email}: {reset_token}")
         return False
     
     try:
         msg = MIMEMultipart()
-        msg['From'] = smtp_user
+        msg['From'] = f"{from_name} <{smtp_user}>"
         msg['To'] = email
-        msg['Subject'] = "Espaço VIV - Redefinir Senha"
+        msg['Reply-To'] = reply_to
+        msg['Subject'] = "Espaco VIV - Codigo de Redefinicao de Senha"
         
         html_body = f"""
+        <!DOCTYPE html>
         <html>
-        <body>
-            <h2>🌿 Espaço VIV - Redefinição de Senha</h2>
-            <p>Olá!</p>
-            <p>Você solicitou a redefinição da sua senha. Use o código abaixo:</p>
-            <div style="background-color: #f0f0f0; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-                <h3 style="color: #2c5530; font-family: monospace; letter-spacing: 2px;">{reset_token}</h3>
+        <head>
+            <meta charset="UTF-8">
+            <title>Espaco VIV - Redefinicao de Senha</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: linear-gradient(135deg, #47103C 0%, #6B2154 100%); padding: 30px; border-radius: 10px; text-align: center;">
+                    <h1 style="color: white; margin: 0; font-size: 24px;">Espaco VIV</h1>
+                    <p style="color: #f0f0f0; margin: 10px 0 0 0;">Redefinicao de Senha</p>
+                </div>
+                
+                <div style="padding: 30px; background: #f9f9f9; border-radius: 10px; margin-top: 20px;">
+                    <h2 style="color: #47103C; margin-top: 0;">Ola!</h2>
+                    <p>Voce solicitou a redefinicao da sua senha. Use o codigo de verificacao abaixo:</p>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 8px; text-align: center; margin: 25px 0; border: 2px dashed #47103C;">
+                        <h2 style="color: #47103C; font-family: 'Courier New', monospace; letter-spacing: 3px; margin: 0; font-size: 28px;">{reset_token}</h2>
+                    </div>
+                    
+                    <div style="background: #fff3cd; border: 1px solid #ffeeba; border-radius: 5px; padding: 15px; margin: 20px 0;">
+                        <p style="margin: 0; font-size: 14px; color: #856404;">
+                            <strong>Importante:</strong> Este codigo e valido por 1 hora. Se voce nao solicitou esta redefinicao, ignore este email.
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 12px;">
+                    <p>Esta mensagem foi enviada automaticamente pelo sistema Espaco VIV.</p>
+                    <p>Para duvidas, entre em contato conosco.</p>
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 15px 0;">
+                    <p>&copy; 2024 Espaco VIV. Todos os direitos reservados.</p>
+                </div>
             </div>
-            <p>Este código é válido por 1 hora.</p>
-            <br>
-            <p>Equipe Espaço VIV 🌱</p>
         </body>
         </html>
         """
@@ -289,9 +345,17 @@ def send_password_reset_email(email: str, reset_token: str):
         server.send_message(msg)
         server.quit()
         
+        print(f"[EMAIL] Email de redefinicao enviado com sucesso para {email}")
         return True
+        
+    except smtplib.SMTPAuthenticationError:
+        print(f"[EMAIL] ERRO: Falha na autenticacao SMTP para {email}")
+        return False
+    except smtplib.SMTPException as e:
+        print(f"[EMAIL] ERRO SMTP ao enviar para {email}: {str(e)}")
+        return False
     except Exception as e:
-        print(f"❌ Erro ao enviar email: {e}")
+        print(f"[EMAIL] ERRO geral ao enviar para {email}: {str(e)}")
         return False
 
 def get_default_slots(target_date: date) -> List[str]:
@@ -315,11 +379,11 @@ def is_holiday(target_date: date) -> bool:
 @app.get("/")
 async def root():
     return {
-        "message": "🚀 Espaço VIV API no Render funcionando!",
+        "message": "Espaco VIV API no Render funcionando!",
         "status": "healthy",
         "version": "1.0.0",
         "environment": os.getenv("ENVIRONMENT", "production"),
-        "database": "in-memory (temporário)"
+        "database": "in-memory (temporario)"
     }
 
 @app.get("/health")
@@ -346,14 +410,14 @@ async def register(user_data: UserRegister):
     
     # Check if user already exists
     if any(u["email"] == user_data.email for u in users_db):
-        errors.append("E-mail já está cadastrado")
+        errors.append("E-mail ja esta cadastrado")
     
     # Validate CPF if provided
     if user_data.cpf:
         if not validate_cpf(user_data.cpf):
-            errors.append("CPF inválido")
+            errors.append("CPF invalido")
         elif any(u.get("cpf") == user_data.cpf for u in users_db):
-            errors.append("CPF já está cadastrado")
+            errors.append("CPF ja esta cadastrado")
     
     # Validate password strength
     password_validation = validate_password_strength(user_data.password)
@@ -366,27 +430,27 @@ async def register(user_data: UserRegister):
     
     # Validate phone format
     if user_data.phone and not user_data.phone.replace("(", "").replace(")", "").replace("-", "").replace(" ", "").isdigit():
-        errors.append("Formato de telefone inválido")
+        errors.append("Formato de telefone invalido")
     
     # Validate specialty prices
     if user_data.specialty_prices:
         specialty_names = [sp.specialty for sp in user_data.specialty_prices]
         if len(set(specialty_names)) != len(specialty_names):
-            errors.append("Não é possível definir o mesmo preço duas vezes para a mesma especialidade")
+            errors.append("Nao e possivel definir o mesmo preco duas vezes para a mesma especialidade")
         
         for sp in user_data.specialty_prices:
             if sp.price <= 0:
-                errors.append(f"Preço para {sp.specialty} deve ser maior que zero")
+                errors.append(f"Preco para {sp.specialty} deve ser maior que zero")
             if sp.price > 5000:
-                errors.append(f"Preço para {sp.specialty} não pode exceder R$ 5.000")
+                errors.append(f"Preco para {sp.specialty} nao pode exceder R$ 5.000")
             if sp.specialty not in user_data.specialties:
-                errors.append(f"Preço definido para especialidade não selecionada: {sp.specialty}")
+                errors.append(f"Preco definido para especialidade nao selecionada: {sp.specialty}")
     
     # If there are validation errors, return them
     if errors:
         raise HTTPException(
             status_code=400,
-            detail={"message": "Dados inválidos", "errors": errors}
+            detail={"message": "Dados invalidos", "errors": errors}
         )
     
     # Parse birth_date if provided
@@ -422,14 +486,14 @@ async def register(user_data: UserRegister):
     print(f"Usuario salvo no banco: {new_user}")
     print(f"Especialidades salvas: {new_user.get('specialties', [])}")
     print(f"Precos salvos: {new_user.get('specialty_prices', [])}")
-    return {"message": "Usuário cadastrado com sucesso", "user_id": new_user["id"]}
+    return {"message": "Usuario cadastrado com sucesso", "user_id": new_user["id"]}
 
 @app.post("/api/auth/login")
 async def login(login_data: UserLogin):
     user = next((u for u in users_db if u["email"] == login_data.email), None)
     
     if not user or not verify_password(login_data.password, user["password"]):
-        raise HTTPException(status_code=401, detail="E-mail ou senha inválidos")
+        raise HTTPException(status_code=401, detail="E-mail ou senha invalidos")
     
     access_token = create_access_token(user["id"])
     
@@ -450,7 +514,7 @@ async def login(login_data: UserLogin):
 async def get_current_user(authorization: str = Header(None)):
     """Get current user information from JWT token"""
     if not authorization:
-        raise HTTPException(status_code=401, detail="Token de autorização não fornecido")
+        raise HTTPException(status_code=401, detail="Token de autorizacao nao fornecido")
     
     # Extract token from Authorization header (format: "Bearer <token>")
     if not authorization.startswith("Bearer "):
@@ -552,7 +616,18 @@ async def get_available_times(massagista_id: int, date: str):
         if appointment_date < datetime.now().date():
             return []
         
-        base_times = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"]
+        # Buscar horários configurados pelo massagista para esta data
+        configured_times = []
+        if massagista_id in availability_db and date in availability_db[massagista_id]:
+            day_availability = availability_db[massagista_id][date]
+            if day_availability.get("status") == "available":
+                configured_times = day_availability.get("time_slots", [])
+        
+        # Se não há configuração específica, usar horários padrão
+        if not configured_times:
+            configured_times = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", 
+                               "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", 
+                               "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"]
         
         # Remove horários ocupados
         booked_times = [
@@ -561,7 +636,7 @@ async def get_available_times(massagista_id: int, date: str):
             and b["status"] in ["pending", "confirmed"]
         ]
         
-        available = [t for t in base_times if t not in booked_times]
+        available = [t for t in configured_times if t not in booked_times]
         return available
         
     except ValueError:
@@ -573,7 +648,7 @@ async def forgot_password(request: ForgotPasswordRequest):
     user = next((u for u in users_db if u["email"] == request.email), None)
     
     if not user:
-        return {"message": "Se o email existir em nosso sistema, você receberá instruções de redefinição."}
+        return {"message": "Se o email existir em nosso sistema, voce recebera instrucoes de redefinicao."}
     
     reset_token = secrets.token_urlsafe(6)[:6].upper()
     reset_expires = datetime.utcnow() + timedelta(hours=1)
@@ -581,12 +656,14 @@ async def forgot_password(request: ForgotPasswordRequest):
     user["reset_token"] = reset_token
     user["reset_token_expires"] = reset_expires
     
+    # Try to send the email
     email_sent = send_password_reset_email(request.email, reset_token)
     
-    if not email_sent:
-        print(f"🔑 Reset token para {request.email}: {reset_token}")
-    
-    return {"message": "Se o email existir em nosso sistema, você receberá instruções de redefinição."}
+    # Always return the same message for security (don't reveal if email exists)
+    return {
+        "message": "Se o email existir em nosso sistema, voce recebera um codigo de verificacao.",
+        "details": "Verifique sua caixa de entrada e spam. O codigo expira em 1 hora."
+    }
 
 @app.post("/api/auth/reset-password")
 async def reset_password(request: ResetPasswordRequest):
@@ -596,7 +673,7 @@ async def reset_password(request: ResetPasswordRequest):
                 and u["reset_token_expires"] > datetime.utcnow()), None)
     
     if not user:
-        raise HTTPException(status_code=400, detail="Token inválido ou expirado")
+        raise HTTPException(status_code=400, detail="Token invalido ou expirado")
     
     if len(request.new_password) < 6:
         raise HTTPException(status_code=400, detail="A senha deve ter pelo menos 6 caracteres")
@@ -605,7 +682,7 @@ async def reset_password(request: ResetPasswordRequest):
     user["reset_token"] = None
     user["reset_token_expires"] = None
     
-    return {"message": "Senha redefinida com sucesso! Você já pode fazer login."}
+    return {"message": "Senha redefinida com sucesso! Voce ja pode fazer login."}
 
 @app.post("/api/auth/validate-password")
 async def validate_password_endpoint(request: dict):
@@ -783,17 +860,106 @@ async def get_saved_day_availability(date: str):
 async def get_today_appointments():
     try:
         user_id = 1
-        today = datetime.now().strftime("%Y-%m-%d")
+        today = datetime.now().date()
         
-        today_bookings = [
-            b for b in bookings_db 
-            if b.get("massagista_id") == user_id and b.get("appointment_date") == today
-        ]
+        today_bookings = []
+        for b in bookings_db:
+            # Convert appointment_date to date object for comparison
+            appointment_date = b.get("appointment_date")
+            if isinstance(appointment_date, str):
+                appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+            
+            if b.get("massagista_id") == user_id and appointment_date == today:
+                # Convert date to string for JSON serialization
+                booking_copy = b.copy()
+                if isinstance(booking_copy.get("appointment_date"), date):
+                    booking_copy["appointment_date"] = booking_copy["appointment_date"].isoformat()
+                if isinstance(booking_copy.get("created_at"), datetime):
+                    booking_copy["created_at"] = booking_copy["created_at"].isoformat()
+                today_bookings.append(booking_copy)
         
         print(f"Agendamentos hoje para user {user_id}: {len(today_bookings)}")
         return today_bookings
     except Exception as e:
         print(f"ERRO Today Appointments: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/massagista/appointments/week")
+async def get_week_appointments():
+    try:
+        user_id = 1
+        today = datetime.now().date()
+        start_of_week = today - timedelta(days=today.weekday())
+        end_of_week = start_of_week + timedelta(days=6)
+        
+        week_bookings = []
+        for b in bookings_db:
+            appointment_date = b.get("appointment_date")
+            if isinstance(appointment_date, str):
+                appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+            
+            if b.get("massagista_id") == user_id and start_of_week <= appointment_date <= end_of_week:
+                booking_copy = b.copy()
+                if isinstance(booking_copy.get("appointment_date"), date):
+                    booking_copy["appointment_date"] = booking_copy["appointment_date"].isoformat()
+                if isinstance(booking_copy.get("created_at"), datetime):
+                    booking_copy["created_at"] = booking_copy["created_at"].isoformat()
+                week_bookings.append(booking_copy)
+        
+        print(f"Agendamentos desta semana para user {user_id}: {len(week_bookings)}")
+        return week_bookings
+    except Exception as e:
+        print(f"ERRO Week Appointments: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/massagista/appointments/month")
+async def get_month_appointments():
+    try:
+        user_id = 1
+        today = datetime.now().date()
+        start_of_month = today.replace(day=1)
+        next_month = start_of_month.replace(month=start_of_month.month % 12 + 1) if start_of_month.month < 12 else start_of_month.replace(year=start_of_month.year + 1, month=1)
+        end_of_month = next_month - timedelta(days=1)
+        
+        month_bookings = []
+        for b in bookings_db:
+            appointment_date = b.get("appointment_date")
+            if isinstance(appointment_date, str):
+                appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+            
+            if b.get("massagista_id") == user_id and start_of_month <= appointment_date <= end_of_month:
+                booking_copy = b.copy()
+                if isinstance(booking_copy.get("appointment_date"), date):
+                    booking_copy["appointment_date"] = booking_copy["appointment_date"].isoformat()
+                if isinstance(booking_copy.get("created_at"), datetime):
+                    booking_copy["created_at"] = booking_copy["created_at"].isoformat()
+                month_bookings.append(booking_copy)
+        
+        print(f"Agendamentos deste mês para user {user_id}: {len(month_bookings)}")
+        return month_bookings
+    except Exception as e:
+        print(f"ERRO Month Appointments: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/massagista/appointments/all")
+async def get_all_appointments():
+    try:
+        user_id = 1
+        
+        all_bookings = []
+        for b in bookings_db:
+            if b.get("massagista_id") == user_id:
+                booking_copy = b.copy()
+                if isinstance(booking_copy.get("appointment_date"), date):
+                    booking_copy["appointment_date"] = booking_copy["appointment_date"].isoformat()
+                if isinstance(booking_copy.get("created_at"), datetime):
+                    booking_copy["created_at"] = booking_copy["created_at"].isoformat()
+                all_bookings.append(booking_copy)
+        
+        print(f"Total agendamentos para user {user_id}: {len(all_bookings)}")
+        return all_bookings
+    except Exception as e:
+        print(f"ERRO All Appointments: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # AVAILABILITY/CALENDAR APIs
@@ -849,7 +1015,7 @@ async def get_day_availability(date: str, authorization: str = Header(None)):
 @app.put("/api/test/week-data")
 async def test_week_data(request: WeekAvailabilityRequest):
     """Endpoint para testar validação dos dados"""
-    print(f"✅ Dados recebidos com sucesso!")
+    print(f"Dados recebidos com sucesso!")
     print(f"Dates: {request.dates}")
     print(f"Status: {request.status}")
     print(f"Time slots: {request.time_slots}")

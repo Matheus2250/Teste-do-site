@@ -158,9 +158,11 @@
         .content-section {
             background: white;
             border-radius: 6px;
-            padding: 20px;
+            padding: 15px;
             border: 1px solid #ddd;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            max-height: 700px;
+            overflow: hidden;
         }
 
         .section-title {
@@ -192,19 +194,29 @@
         }
 
         .calendar-nav {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.5);
             color: white;
             padding: 8px 12px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
             font-weight: 500;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .calendar-nav:hover {
-            background: rgba(255, 255, 255, 1);
-            color: #47103C;
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255,255,255,0.7);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .calendar-nav:active {
+            transform: translateY(0);
         }
 
         .calendar-grid {
@@ -383,8 +395,27 @@
 
         /* Appointments List */
         .appointments-today {
-            max-height: 400px;
+            max-height: 320px;
             overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .appointments-today::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .appointments-today::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .appointments-today::-webkit-scrollbar-thumb {
+            background: #47103C;
+            border-radius: 10px;
+        }
+
+        .appointments-today::-webkit-scrollbar-thumb:hover {
+            background: #5d1a4a;
         }
 
         .appointment-item {
@@ -770,7 +801,7 @@
                 </div>
             </div>
             
-            <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <div style="margin-top: 20px; margin-bottom: 0; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" onclick="setWeekAvailability(true)">
                     <i class="fas fa-check"></i> Disponível esta semana
                 </button>
@@ -1362,35 +1393,41 @@
             }
         }
         
-        function loadUserStats() {
-            const allAppointments = JSON.parse(localStorage.getItem('espacoviv_appointments') || '[]');
-            const userAppointments = allAppointments.filter(apt => apt.massagistId === currentUser.id);
-            
-            const today = new Date();
-            const startOfWeek = new Date(today);
-            startOfWeek.setDate(today.getDate() - today.getDay());
-            const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6);
-            
-            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-            
-            const todayKey = today.toISOString().split('T')[0];
-            
-            const todayCount = userAppointments.filter(apt => apt.date === todayKey).length;
-            const weekCount = userAppointments.filter(apt => {
-                const aptDate = new Date(apt.date);
-                return aptDate >= startOfWeek && aptDate <= endOfWeek;
-            }).length;
-            const monthCount = userAppointments.filter(apt => {
-                const aptDate = new Date(apt.date);
-                return aptDate >= startOfMonth && aptDate <= endOfMonth;
-            }).length;
-            
-            document.getElementById('todayAppointments').textContent = todayCount;
-            document.getElementById('weekAppointments').textContent = weekCount;
-            document.getElementById('monthAppointments').textContent = monthCount;
-            document.getElementById('totalAppointments').textContent = userAppointments.length;
+        async function loadUserStats() {
+            try {
+                // Fazer todas as chamadas em paralelo
+                const [todayRes, weekRes, monthRes, allRes] = await Promise.all([
+                    fetch('http://localhost:10000/api/massagista/appointments/today'),
+                    fetch('http://localhost:10000/api/massagista/appointments/week'),
+                    fetch('http://localhost:10000/api/massagista/appointments/month'),
+                    fetch('http://localhost:10000/api/massagista/appointments/all')
+                ]);
+                
+                const todayAppointments = todayRes.ok ? await todayRes.json() : [];
+                const weekAppointments = weekRes.ok ? await weekRes.json() : [];
+                const monthAppointments = monthRes.ok ? await monthRes.json() : [];
+                const allAppointments = allRes.ok ? await allRes.json() : [];
+                
+                console.log('Estatísticas carregadas:', {
+                    hoje: todayAppointments.length,
+                    semana: weekAppointments.length,
+                    mes: monthAppointments.length,
+                    total: allAppointments.length
+                });
+                
+                document.getElementById('todayAppointments').textContent = todayAppointments.length;
+                document.getElementById('weekAppointments').textContent = weekAppointments.length;
+                document.getElementById('monthAppointments').textContent = monthAppointments.length;
+                document.getElementById('totalAppointments').textContent = allAppointments.length;
+                
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+                // Em caso de erro, zerar todas as estatísticas
+                document.getElementById('todayAppointments').textContent = '0';
+                document.getElementById('weekAppointments').textContent = '0';
+                document.getElementById('monthAppointments').textContent = '0';
+                document.getElementById('totalAppointments').textContent = '0';
+            }
         }
         
         async function loadTodayAppointments() {

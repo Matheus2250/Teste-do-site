@@ -20,7 +20,8 @@
       "Bash(start frontend/pages/profile.html)",
       "Bash(start frontend/pages/index.html)",
       "Bash(start test_login.html)",
-      "Bash(start full_test.html)"
+      "Bash(start full_test.html)",
+      "Bash(start frontend/pages/dashboard.html)"
     ],
     "deny": [],
     "ask": []

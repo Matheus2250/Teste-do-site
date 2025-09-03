@@ -94,6 +94,18 @@ class APIService {
             method: 'POST', body: JSON.stringify(bookingData)
         });
     }
+
+    async forgotPassword(data) {
+        return await this.request('/auth/forgot-password', {
+            method: 'POST', body: JSON.stringify(data)
+        });
+    }
+
+    async resetPassword(data) {
+        return await this.request('/auth/reset-password', {
+            method: 'POST', body: JSON.stringify(data)
+        });
+    }
 }
 
 // Main application initialization
