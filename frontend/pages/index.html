@@ -1840,7 +1840,7 @@
 
             try {
                 // Call API to get massagistas by unit
-                const response = await fetch(`http://localhost:10000/api/massagista/by-unit/${selectedUnit}`);
+                const response = await fetch(`http://127.0.0.1:8001/api/massagista/by-unit/${selectedUnit}`);
                 
                 if (response.ok) {
                     const unitMassagistas = await response.json();
@@ -2000,7 +2000,7 @@
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth() + 1;
                 
-                const response = await fetch(`http://localhost:10000/api/massagista/${selectedMassagista.id}/availability/month/${year}/${month}`);
+                const response = await fetch(`http://127.0.0.1:8001/api/massagista/${selectedMassagista.id}/availability/month/${year}/${month}`);
                 if (response.ok) {
                     return await response.json();
                 }
@@ -2096,7 +2096,7 @@
             
             try {
                 // Get availability for specific day
-                const response = await fetch(`http://localhost:10000/api/massagista/${selectedMassagista.id}/availability/day/${dateStr}`);
+                const response = await fetch(`http://127.0.0.1:8001/api/massagista/${selectedMassagista.id}/availability/day/${dateStr}`);
                 
                 if (response.ok) {
                     const dayAvailability = await response.json();
@@ -2567,7 +2567,7 @@
             
             // Save appointment to backend
             try {
-                const response = await fetch('http://localhost:10000/api/bookings', {
+                const response = await fetch('http://127.0.0.1:8001/api/bookings', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
