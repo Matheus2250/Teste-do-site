@@ -21,7 +21,15 @@
       "Bash(start frontend/pages/index.html)",
       "Bash(start test_login.html)",
       "Bash(start full_test.html)",
-      "Bash(start frontend/pages/dashboard.html)"
+      "Bash(start frontend/pages/dashboard.html)",
+      "Bash(alembic init:*)",
+      "Bash(alembic revision:*)",
+      "Read(/C:\\Users\\Matheus Vitorino\\Desktop\\SITE/**)",
+      "Read(/C:\\Users\\Matheus Vitorino\\Desktop\\SITE\\frontend\\components/**)",
+      "Read(/C:\\Users\\Matheus Vitorino\\Desktop\\SITE\\frontend/**)",
+      "Read(/C:\\Users\\Matheus Vitorino\\Desktop\\SITE\\frontend\\pages/**)",
+      "Read(/C:\\Users\\Matheus Vitorino\\Desktop\\SITE\\frontend\\pages/**)",
+      "Read(/C:\\Users\\Matheus Vitorino\\Desktop\\SITE\\backend/**)"
     ],
     "deny": [],
     "ask": []

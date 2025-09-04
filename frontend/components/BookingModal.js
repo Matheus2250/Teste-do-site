@@ -6,42 +6,7 @@ class BookingModal {
         this.selectedDate = '';
         this.selectedTime = '';
         this.currentStep = 1;
-        this.massagistas = {
-            'sp-perdizes': [
-                { id: 1, name: 'Ana Silva', specialties: 'Shiatsu, Relaxante', avatar: '../assets/images/default-avatar.png' },
-                { id: 2, name: 'Maria Santos', specialties: 'Quick, Terapêutica', avatar: '../assets/images/default-avatar.png' },
-                { id: 3, name: 'Julia Costa', specialties: 'Drenagem, Relaxante', avatar: '../assets/images/default-avatar.png' }
-            ],
-            'sp-vila-clementino': [
-                { id: 4, name: 'Patricia Lima', specialties: 'Shiatsu, Pedras Quentes', avatar: '../assets/images/default-avatar.png' },
-                { id: 5, name: 'Fernanda Alves', specialties: 'Quick, Relaxante', avatar: '../assets/images/default-avatar.png' }
-            ],
-            'sp-ingleses': [
-                { id: 6, name: 'Carla Rodrigues', specialties: 'Terapêutica, Shiatsu', avatar: '../assets/images/default-avatar.png' },
-                { id: 7, name: 'Roberta Nascimento', specialties: 'Relaxante, Drenagem', avatar: '../assets/images/default-avatar.png' },
-                { id: 8, name: 'Camila Ferreira', specialties: 'Quick, Pedras Quentes', avatar: '../assets/images/default-avatar.png' }
-            ],
-            'sp-prudente': [
-                { id: 9, name: 'Luciana Oliveira', specialties: 'Shiatsu, Relaxante', avatar: '../assets/images/default-avatar.png' }
-            ],
-            'rj-centro': [
-                { id: 10, name: 'Renata Castro', specialties: 'Quick, Terapêutica', avatar: '../assets/images/default-avatar.png' },
-                { id: 11, name: 'Beatriz Moreira', specialties: 'Relaxante, Drenagem', avatar: '../assets/images/default-avatar.png' }
-            ],
-            'rj-copacabana': [
-                { id: 12, name: 'Vanessa Silva', specialties: 'Shiatsu, Pedras Quentes', avatar: '../assets/images/default-avatar.png' },
-                { id: 13, name: 'Claudia Santos', specialties: 'Quick, Relaxante', avatar: '../assets/images/default-avatar.png' },
-                { id: 14, name: 'Adriana Lima', specialties: 'Terapêutica, Drenagem', avatar: '../assets/images/default-avatar.png' }
-            ],
-            'bsb-sudoeste': [
-                { id: 15, name: 'Monica Pereira', specialties: 'Shiatsu, Relaxante', avatar: '../assets/images/default-avatar.png' },
-                { id: 16, name: 'Daniela Costa', specialties: 'Quick, Terapêutica', avatar: '../assets/images/default-avatar.png' }
-            ],
-            'bsb-asa-sul': [
-                { id: 17, name: 'Sandra Oliveira', specialties: 'Relaxante, Drenagem', avatar: '../assets/images/default-avatar.png' },
-                { id: 18, name: 'Helena Rodrigues', specialties: 'Shiatsu, Pedras Quentes', avatar: '../assets/images/default-avatar.png' }
-            ]
-        };
+        this.currentMassagistas = [];
         
         this.init();
     }
@@ -101,20 +66,46 @@ class BookingModal {
         this.currentStep = 1;
     }
     
-    loadMassagistasByUnit() {
+    async loadMassagistasByUnit() {
         this.selectedUnit = document.getElementById('unitSelect').value;
         if (!this.selectedUnit) return;
         
-        const unitMassagistas = this.massagistas[this.selectedUnit] || [];
         const grid = document.getElementById('massagistaGrid');
         
-        grid.innerHTML = unitMassagistas.map(m => `
-            <div class="massagista-card" onclick="bookingModal.selectMassagista(${m.id}, '${m.name}')">
-                <img src="${m.avatar}" alt="${m.name}">
-                <h4>${m.name}</h4>
-                <p>${m.specialties}</p>
-            </div>
-        `).join('');
+        try {
+            // Call API to get massagistas by unit
+            const response = await fetch(`http://localhost:10000/api/massagista/by-unit/${this.selectedUnit}`);
+            
+            if (response.ok) {
+                const unitMassagistas = await response.json();
+                
+                if (unitMassagistas.length === 0) {
+                    grid.innerHTML = '<p>Nenhuma massagista disponível nesta unidade no momento.</p>';
+                    return;
+                }
+                
+                grid.innerHTML = unitMassagistas.map((massagista, index) => `
+                    <div class="massagista-card" onclick="bookingModal.selectMassagista(${massagista.id}, '${massagista.name}')">
+                        <div class="avatar-placeholder">${massagista.name.charAt(0)}</div>
+                        <h4>${massagista.name}</h4>
+                        <p>${massagista.specialties.join(', ')}</p>
+                        <span class="status ${massagista.is_available ? 'online' : 'offline'}">
+                            ${massagista.is_available ? 'Disponível' : 'Ocupada'}
+                        </span>
+                    </div>
+                `).join('');
+                
+                // Store massagistas data for selection
+                this.currentMassagistas = unitMassagistas;
+                
+            } else {
+                console.error('Erro na resposta da API:', response.status);
+                grid.innerHTML = '<p>Erro ao carregar massagistas. Tente novamente.</p>';
+            }
+        } catch (error) {
+            console.error('Erro ao carregar massagistas da unidade:', error);
+            grid.innerHTML = '<p>Erro ao carregar massagistas. Tente novamente.</p>';
+        }
         
         this.showStep(2);
     }
@@ -290,8 +281,8 @@ class BookingModal {
 const bookingModal = new BookingModal();
 
 // Global functions for backward compatibility
-function loadMassagistasByUnit() {
-    bookingModal.loadMassagistasByUnit();
+async function loadMassagistasByUnit() {
+    await bookingModal.loadMassagistasByUnit();
 }
 
 function openAgendamento(promocao) {
